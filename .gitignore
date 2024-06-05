@@ -1,3 +1,9 @@
+# User ignored
+.DS_Store
+!document/*.png
+!document/*.jpg
+!document/*.jpeg
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
