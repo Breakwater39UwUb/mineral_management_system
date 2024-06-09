@@ -1,3 +1,6 @@
+<!-- Version description:
+  This is original version
+-->
 # 礦業會計系統
 
 資料庫系統期末專題
