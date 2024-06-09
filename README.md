@@ -1,3 +1,7 @@
+<!-- Version description:
+  This version do not contain "Client" entity.
+-->
+
 # 礦業會計系統
 
 資料庫系統期末專題
