@@ -1,3 +1,7 @@
+<!-- Version description:
+  This version contains "Client" entity with extended relationships.
+-->
+
 # 礦業會計系統
 
 資料庫系統期末專題
