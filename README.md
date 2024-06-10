@@ -31,6 +31,7 @@
   - [資料舉例](#資料舉例)
   - [Schema](#schema)
   - [SQL](#sql)
+  - [MariaDB Table Creation](#mariadb-table-creation)
     - [資料表結果圖](#資料表結果圖)
   - [分工](#分工)
   - [參考資料](#參考資料)
@@ -1131,6 +1132,163 @@ CREATE TABLE IF NOT EXISTS Manufact (
     CostOfGoods >= 0
   )
 )
+```
+
+## MariaDB Table Creation
+
+```sql
+CREATE TABLE
+    IF NOT EXISTS Employee (
+        EmployeeID VARCHAR(11) NOT NULL,
+        Department VARCHAR(10) NOT NULL,
+        Position VARCHAR(10) NOT NULL,
+        EmployeeName VARCHAR(10) NOT NULL,
+        PRIMARY KEY (EmployeeID),
+        CONSTRAINT check_employee CHECK (
+            EmployeeID REGEXP '[A-Z]{1,3}-[A-Z]{1,3}-[A-Z0-9]{3}'
+            AND LENGTH (EmployeeID) != 0
+            AND LENGTH (Department) != 0
+            AND LENGTH (Position) != 0
+            AND LENGTH (EmployeeName) != 0
+        )
+    );
+```
+
+```sql
+CREATE TABLE
+    IF NOT EXISTS Bank (
+        BankCode VARCHAR(7) NOT NULL,
+        BankName VARCHAR(30) NOT NULL,
+        PRIMARY KEY (BankCode),
+        CONSTRAINT check_bank CHECK (
+            BankCode REGEXP '[0-9]{3}'
+            OR BankCode REGEXP '[0-9]{7}'
+        )
+    );
+```
+
+```sql
+CREATE TABLE
+    IF NOT EXISTS Customer (
+        CustomerID VARCHAR(10) NOT NULL,
+        CustomerName VARCHAR(30) NOT NULL,
+        PRIMARY KEY (CustomerID),
+        CONSTRAINT check_customer CHECK (CustomerID REGEXP 'CLIENT-[A-Z0-9]{3}')
+    );
+```
+
+```sql
+CREATE TABLE
+    IF NOT EXISTS Supplier (
+        SupplierID VARCHAR(6) NOT NULL,
+        SupplierName VARCHAR(50) NOT NULL,
+        PRIMARY KEY (SupplierID),
+        CONSTRAINT check_supplier CHECK (SupplierID REGEXP 'SUP-[A-Z0-9]{2}')
+    );
+```
+
+```sql
+CREATE TABLE
+    IF NOT EXISTS ItemCategory (
+        ItemCategoryID VARCHAR(7) NOT NULL,
+        CategoryDescription VARCHAR(10) NOT NULL DEFAULT '未分類',
+        PRIMARY KEY (ItemCategoryID),
+        CONSTRAINT check_category CHECK (ItemCategoryID REGEXP 'CAT-[0-9]{3}')
+    );
+```
+
+```sql
+CREATE TABLE
+    IF NOT EXISTS Warehouse (
+        WarehouseID VARCHAR(7) NOT NULL,
+        WarehouseAddress VARCHAR(70) NOT NULL,
+        WarehouseNote VARCHAR(100),
+        PRIMARY KEY (WarehouseID),
+        CONSTRAINT check_warehouse CHECK (WarehouseID REGEXP 'WH-[0-9]{4}')
+    );
+```
+
+```sql
+CREATE TABLE
+    IF NOT EXISTS Item (
+        ItemID VARCHAR(15) NOT NULL,
+        ItemCategoryID VARCHAR(7) NOT NULL,
+        ItemName VARCHAR(50) NOT NULL,
+        ItemQuantity FLOAT NOT NULL DEFAULT 0.0,
+        QuantityUnit VARCHAR(4) NOT NULL,
+        ItemPrice INT NOT NULL DEFAULT 0,
+        `Usage` VARCHAR(50) DEFAULT NULL,
+        StorageLocation VARCHAR(7) NOT NULL,
+        PurchaseDate DATE DEFAULT NULL,
+        Supplier VARCHAR(6) NOT NULL,
+        PRIMARY KEY (ItemID),
+        FOREIGN KEY (ItemCategoryID) REFERENCES ItemCategory (ItemCategoryID),
+        FOREIGN KEY (StorageLocation) REFERENCES Warehouse (WarehouseID),
+        FOREIGN KEY (Supplier) REFERENCES Supplier (SupplierID),
+        CONSTRAINT check_item CHECK (ItemID REGEXP '[A-Z]{5}[0-9]{10}')
+    );
+```
+
+```sql
+CREATE TABLE
+    IF NOT EXISTS Orders (
+        OrderNumber VARCHAR(12) NOT NULL,
+        PaymentDate DATE DEFAULT NULL,
+        PaymentMethod VARCHAR(2) NOT NULL,
+        TransactionParty VARCHAR(10) NOT NULL,
+        PRIMARY KEY (OrderNumber),
+        FOREIGN KEY (TransactionParty) REFERENCES Customer (CustomerID),
+        CONSTRAINT check_order CHECK (OrderNumber REGEXP '[0-9]{8}-[A-Za-z0-9]{3}')
+    );
+```
+
+```sql
+CREATE TABLE
+    IF NOT EXISTS OrderDetail (
+        DetailID VARCHAR(15) NOT NULL,
+        OrderNumber VARCHAR(12) NOT NULL,
+        TransactionItem VARCHAR(15) NOT NULL,
+        TransactionQuantity FLOAT NOT NULL,
+        QuantityUnit VARCHAR(4) NOT NULL,
+        PRIMARY KEY (DetailID),
+        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber),
+        FOREIGN KEY (TransactionItem) REFERENCES Item (ItemID),
+        CONSTRAINT check_orderdetail CHECK (
+            DetailID REGEXP '[0-9]{8}-[A-Za-z0-9]{3}-[0-9]{2}'
+        )
+    );
+```
+
+```sql
+CREATE TABLE
+    IF NOT EXISTS PaymentDetail (
+        BillNumber VARCHAR(10) NOT NULL,
+        OrderNumber VARCHAR(12) NOT NULL,
+        TransactionParty VARCHAR(10) NOT NULL,
+        BankCode VARCHAR(3),
+        BankAccount VARCHAR(14),
+        TransactionDate DATE DEFAULT NULL,
+        Amount INT NOT NULL,
+        PRIMARY KEY (BillNumber),
+        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber),
+        FOREIGN KEY (TransactionParty) REFERENCES Customer (CustomerID),
+        FOREIGN KEY (BankCode) REFERENCES Bank (BankCode),
+        CONSTRAINT check_paymentdetail CHECK (BillNumber REGEXP '[A-Za-z0-9]{3}-[0-9]{6}')
+    );
+```
+
+```sql
+CREATE TABLE
+    IF NOT EXISTS Manufacturing (
+        EmployeeID VARCHAR(11) NOT NULL,
+        ItemID VARCHAR(15) NOT NULL,
+        ManufacturingQuantity FLOAT NOT NULL,
+        SalesCost INT DEFAULT NULL,
+        ManufacturingDate DATE DEFAULT NULL,
+        PRIMARY KEY (EmployeeID, ItemID),
+        FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID),
+        FOREIGN KEY (ItemID) REFERENCES Item (ItemID)
+    );
 ```
 
 ### 資料表結果圖
