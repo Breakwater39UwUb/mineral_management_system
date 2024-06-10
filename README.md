@@ -30,8 +30,8 @@
   - [詳細說明](#詳細說明)
   - [資料舉例](#資料舉例)
   - [Schema](#schema)
-  - [SQL](#sql)
-  - [MariaDB Table Creation](#mariadb-table-creation)
+    - [SQL](#sql)
+    - [MariaDB Table Creation](#mariadb-table-creation)
     - [資料表結果圖](#資料表結果圖)
   - [分工](#分工)
   - [參考資料](#參考資料)
@@ -269,16 +269,16 @@
 
 共有十個實體
 
-1. 物品
-2. 員工
-3. 收付款明細
-4. 銀行
-5. 客戶
-6. 供應商
-7. 物品類別
-8. 倉庫
-9. 訂單
-10. 訂單明細
+1. 員工
+2. 銀行
+3. 客戶
+4. 供應商
+5. 物品類別
+6. 倉庫
+7. 物品
+8. 訂單
+9. 訂單明細
+10. 收付款明細
 
 共有十個關聯
 
@@ -1026,115 +1026,154 @@
 
 ## Schema
 
-## SQL
+### SQL
 
-```SQL
-CREATE TABLE Employee (
-  EmployeeID CHAR(11) NOT NULL,
-  Department VARCHAR(10) NOT NULL,
-  Position VARCHAR(10) NOT NULL,
-  EmployeeName VARCHAR(10) NOT NULL,
-  PRIMARY KEY (EmpId) CONSTRAINT check_employee CHECK (
-    LENGTH(EmpId) != 0
-    AND LENGTH(EmpDepartment) != 0
-    AND LENGTH(EmpPosition) != 0
-    AND LENGTH(EmpName) != 0
-  )
-);
-```
+1. 員工
 
-```SQL
-CREATE TABLE Items (
-  ItemId CHAR(15) NOT NULL,
-  ItemNum INT NOT NULL DEFAULT 0,
-  ItemValue INT NOT NULL DEFAULT 0,
-  ItemName VARCHAR(50) NOT NULL,
-  ItemClass VARCHAR(10) DEFAULT '未分類',
-  ItemPlace VARCHAR(50) DEFAULT NULL,
-  ItemUsage VARCHAR(50) DEFAULT NULL,
-  ManufacturingDate DATE DEFAULT NULL,
-  PurchaseDate DATE DEFAULT NULL,
-  PRIMARY KEY (ItemId) CONSTRAINT chk_Items CHECK (
-    ItemNum >= 0
-    AND ItemValue >= 0
-    AND CostOfGoods >= 0
-    AND LENGTH(ItemId) != 0
-    AND LENGTH(ItemNum) != 0
-    AND LENGTH(ItemValue) != 0
-    AND LENGTH(ItemName) != 0
-  )
-);
-```
+   ```sql
+   Employee (
+      EmployeeID: string,
+      Department: string,
+      Position: string,
+      EmployeeName: string
+   )
+   Primary Key: EmployeeID
+   ```
 
-```SQL
-CREATE TABLE Trade (
-  OrderId CHAR(13) NOT NULL,
-  TraPartners VARCHAR(50) NOT NULL,
-  PayMethod VARCHAR(10) DEFAULT NULL,
-  TraClass CHAR(2) NOT NULL,
-  TraDate DATE NOT NULL,
-  EmpId CHAR(15) NOT NULL,
-  ItemId CHAR(15) NOT NULL,
-  PRIMARY KEY (OrderId),
-  FOREIGN KEY (EmpId) REFERENCES Employee(EmpId),
-  FOREIGN KEY (ItemId) REFERENCES Items(ItemId)
-  CONSTRAINT chk_Trade CHECK (
-    LENGTH(OrderId) == 13
-    AND LENGTH(TraPartners) != 0
-    AND LENGTH(TraClass) != 0
-    AND LENGTH(TraDate) != 0
-  )
-);
-```
+2. 銀行
 
-```SQL
-CREATE TABLE Bill (
-  BillID VARCHAR(15) NOT NULL,
-  OrderId CHAR(13) NOT NULL,
-  TraPartners VARCHAR(50) NOT NULL,
-  BankID CHAR(3) NOT NULL,
-  BankName VARCHAR(50) NOT NULL,
-  BankAcc CHAR(14) NOT NULL,
-  PayDate DATE NOT NULL,
-  TraNum INT NOT NULL DEFAULT 0, -- total amount
-  PRIMARY KEY (BillID),
-  FOREIGN KEY (TraPartners) REFERENCES Trade(TraPartners),
-  FOREIGN KEY (OrderId) REFERENCES Trade(OrderId),
-  CONSTRAINT chk_Bill CHECK (
-    LENGTH(BankID) == 3
-    AND LENGTH(BankAcc) == 14
-    AND LENGTH(BillID) != 0
-    AND LENGTH(BankName) != 0
-    AND LENGTH(PayDate) != 0
-    AND LENGTH(TraNum) != 0
-  )
-);
-```
+   ```sql
+   Bank (
+      BankCode: string,
+      BankName: string
+   )
+   Primary Key: BankCode
+   ```
 
-```SQL
-CREATE TABLE Record (
-  EmpId CHAR(15) NOT NULL,
-  BillID VARCHAR(15) NOT NULL,
-  FOREIGN KEY (EmpId) REFERENCES Trade(EmpId),
-  FOREIGN KEY (BillID) REFERENCES Bill(BillID),
-);
-```
+3. 客戶
 
-```SQL
-CREATE TABLE IF NOT EXISTS Manufact (
-  EmpId CHAR(15) NOT NULL,
-  ItemId CHAR(15) NOT NULL,
-  ManufactureDate DATE NOT NULL,
-  CostOfGoods INT DEFAULT 0,
-  FOREIGN KEY (EmpId) REFERENCES Trade(EmpId),
-  FOREIGN KEY (ItemId) REFERENCES Items(ItemId),
-  CONSTRAINT check_cost CHECK (
-    CostOfGoods >= 0
-  )
-)
-```
+   ```sql
+   Customer (
+      CustomerID: string,
+      CustomerName: string
+   )
+   Primary Key: CustomerID
+   ```
 
-## MariaDB Table Creation
+4. 供應商
+
+   ```sql
+   Supplier (
+      SupplierID: string,
+      SupplierName: string
+   )
+   Primary Key: SupplierID
+   ```
+
+5. 物品類別
+
+   ```sql
+   ItemCategory (
+      ItemCategoryID: string,
+      CategoryDescription: string
+   )
+   Primary Key: ItemCategoryID
+   ```
+
+6. 倉庫
+
+   ```sql
+   Warehouse (
+      WarehouseID: string,
+      WarehouseAddress: string,
+      WarehouseNote: string
+   )
+   Primary Key: WarehouseID
+   ```
+
+7. 物品
+
+   ```sql
+   Item (
+      ItemID: string,
+      ItemCategoryID: string,
+      ItemName: string,
+      ItemQuantity: float,
+      QuantityUnit: string,
+      ItemPrice: integer,
+      Usage: string,
+      StorageLocation: string,
+      PurchaseDate: date,
+      Supplier: string
+   )
+   Primary Key: ItemID
+   Foreign Key: ItemCategoryID References ItemCategory
+   Foreign Key: StorageLocation References Warehouse
+   Foreign Key: Supplier References Supplier
+   ```
+
+8. 訂單
+
+   ```sql
+   Orders (
+      OrderNumber: string,
+      PaymentDate: date,
+      PaymentMethod: string,
+      TransactionParty: string
+   )
+   Primary Key: OrderNumber
+   Foreign Key: TransactionParty References Customer
+   ```
+
+9. 訂單明細
+
+   ```sql
+   OrderDetail (
+      DetailID: string,
+      OrderNumber: string,
+      TransactionItem: string,
+      TransactionQuantity: float,
+      QuantityUnit: string
+   )
+   Primary Key: DetailID
+   Foreign Key: OrderNumber References Orders
+   Foreign Key: TransactionItem References Item
+   ```
+
+10. 收付款明細
+
+   ```sql
+   PaymentDetail (
+      BillNumber: string,
+      OrderNumber: string,
+      TransactionParty: string,
+      BankCode: string,
+      BankAccount: string,
+      TransactionDate: date,
+      Amount: integer
+   )
+   Primary Key: BillNumber
+   Foreign Key: OrderNumber References Orders
+   Foreign Key: TransactionParty References Customer
+   Foreign Key: BankCode References Bank
+   ```
+
+11. 製造
+
+   ```sql
+   Manufacturing (
+      EmployeeID: string,
+      ItemID: string,
+      ManufacturingQuantity: float,
+      SalesCost: integer,
+      ManufacturingDate: date
+   )
+   Primary Key: (EmployeeID, ItemID)
+   Foreign Key: EmployeeID References Employee
+   Foreign Key: ItemID References Item
+   ```
+
+### MariaDB Table Creation
 
 ```sql
 CREATE TABLE
