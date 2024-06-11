@@ -3,6 +3,8 @@
 !document/*.png
 !document/*.jpg
 !document/*.jpeg
+test.ipynb
+test.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
