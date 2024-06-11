@@ -4,6 +4,14 @@
 
 # 礦業會計系統
 
+---
+
+最新文件與說明在[文件分支][document_edit branch]
+
+[version_3 分支][version_3 branch] 將作為系統實作分支
+
+---
+
 資料庫系統期末專題
 
 題目:礦業會計系統
@@ -24,15 +32,24 @@
   - [系統需求說明](#系統需求說明)
   - [使用案例](#使用案例)
     - [使用案例圖](#使用案例圖)
-  - [完整性限制](#完整性限制)
   - [ER-Diagram](#er-diagram)
-    - [實體屬性與關聯說明](#實體屬性與關聯說明)
-  - [詳細說明](#詳細說明)
-  - [資料舉例](#資料舉例)
+  - [完整性限制](#完整性限制)
+    - [實體](#實體)
+    - [關聯](#關聯)
+  - [實體與關聯之屬性及詳細說明](#實體與關聯之屬性及詳細說明)
+    - [實體屬性](#實體屬性)
+    - [關聯屬性](#關聯屬性)
+    - [實體詳細說明](#實體詳細說明)
+    - [關聯詳細說明](#關聯詳細說明)
+  - [View 說明](#view-說明)
+  - [使用者說明](#使用者說明)
   - [Schema](#schema)
     - [SQL](#sql)
     - [MariaDB Table Creation](#mariadb-table-creation)
-    - [資料表結果圖](#資料表結果圖)
+    - [新增資料](#新增資料)
+    - [建立 View](#建立-view)
+    - [使用者建立及權限分配](#使用者建立及權限分配)
+  - [資料表結果圖](#資料表結果圖)
   - [分工](#分工)
   - [參考資料](#參考資料)
 
@@ -120,9 +137,39 @@
 
 ![Use case diagram](./document/Usecase.png)
 
+## ER-Diagram
+
+![ER-Diagram](./document/Chenerdiagram_v3.png)
+
+共有十個實體
+
+1. 員工
+2. 銀行
+3. 客戶
+4. 供應商
+5. 物品類別
+6. 倉庫
+7. 物品
+8. 訂單
+9. 訂單明細
+10. 收付款明細
+
+共有十個關聯
+
+1. 處理訂單
+2. 製造
+3. 紀錄
+4. 下單
+5. 供應
+6. 出貨
+7. 包含
+8. 存放
+9. 確認
+10. 產生
+
 ## 完整性限制
 
-實體
+### 實體
 
 1. 員工
     1. 員工ID:長度為11的大寫英數字串,不可為空,格式為 `DEP-POS-ID`
@@ -130,7 +177,7 @@
         2. `DEP` 代表部門,以1至3位大寫英文字母編碼。
         3. `POS` 代表職位,以1至3位大寫英文字母編碼。
         4. `ID` 為3位大寫英文字母與數字編碼。
-        5. 縮寫舉例列於 [詳細說明](#詳細說明)
+        5. 縮寫舉例列於 [實體詳細說明](#實體詳細說明)
     2. 部門:長度為10的中文字串,須符合公司內的部門名稱,不可為空。
     3. 職位:長度為10的中文字串,須符合公司內的職位名稱,不可為空。
     4. 姓名:長度為10的中文字串,須符合姓氏+名字順序,不可為空。
@@ -245,7 +292,7 @@
         1. 格式為 `yyyy-MM-dd`
     7. 金額:正整數,不可為空
 
-關聯
+### 關聯
 
 1. 訂單處理關係
     <!-- 員工處裡訂單 -->
@@ -304,44 +351,12 @@
     1. 訂單編號:長度為12的字串，格式為 `DATE-OrderId`，參考`訂單實體之訂單編號`。
     2. 明細ID:長度為15的字串,格式為 `DATE-OrderId-Detail`，參考`訂單明細實體之明細ID`。
 
-## ER-Diagram
-
-![ER-Diagram](./document/Chenerdiagram_v3.png)
-
-共有十個實體
-
-1. 員工
-2. 銀行
-3. 客戶
-4. 供應商
-5. 物品類別
-6. 倉庫
-7. 物品
-8. 訂單
-9. 訂單明細
-10. 收付款明細
-
-共有十個關聯
-
-1. 處理訂單
-2. 製造
-3. 紀錄
-4. 下單
-5. 供應
-6. 出貨
-7. 包含
-8. 存放
-9. 確認
-10. 產生
-
-![ER-Diagram](./document/Chenerdiagram_v2.png)
-
-### 實體屬性與關聯說明
+## 實體與關聯之屬性及詳細說明
 
 此段僅列出實體所擁有之屬性，
-說明列於[詳細說明](#詳細說明)
+說明列於[實體詳細說明](#實體詳細說明)
 
-實體
+### 實體屬性
 
 | 實體 | 屬性   | Key         |
 | ---- | ------ | ----------- |
@@ -414,7 +429,7 @@
 |            | 交易日期 |               |
 |            | 金額     |               |
 
-關聯
+### 關聯屬性
 
 1. 訂單處理關係
     | 關聯     | 關聯實體 | 關聯實體 | Cardinality | 說明                                                     |
@@ -559,9 +574,7 @@
     | 確認 | 帳單編號 | Foreign Key |
     |      | 銀行代號 | Foreign Key |
 
-## 詳細說明
-
-實體
+### 實體詳細說明
 
 | 實體 | 屬性   | Key         | Domain                                | 說明                                                   |
 | ---- | ------ | ----------- | ------------------------------------- | ------------------------------------------------------ |
@@ -698,7 +711,7 @@
 
 帳單編號範例: Aa0-000000
 
-關聯
+### 關聯詳細說明
 
 1. 訂單處理關係
     | 關聯     | 關聯實體 | 關聯實體 | Cardinality | 說明                                                     |
@@ -1024,48 +1037,9 @@
     >
     > 如果您有更多關於SQL或數據庫設計的問題，請隨時提問！
 
-## 資料舉例
+## View 說明
 
-範例資料可參考 [Reference data](./reference_data.md)
-
-| 實體 | 屬性   | 範例資料   |
-| ---- | ------ | ---------- |
-| 員工 | 員工ID | PDD-PM-100 |
-|      |        |            |
-
-| 實體 | 屬性 | 範例資料 |
-| ---- | ---- | -------- |
-| 銀行 |      |          |
-
-| 實體 | 屬性 | 範例資料 |
-| ---- | ---- | -------- |
-| 客戶 |      |          |
-
-| 實體   | 屬性 | 範例資料 |
-| ------ | ---- | -------- |
-| 供應商 |      |          |
-|        |      |          |
-
-| 實體 | 屬性 | 範例資料 |
-| ---- | ---- | -------- |
-| 物品 |      |          |
-
-| 實體       | 屬性 | 範例資料 |
-| ---------- | ---- | -------- |
-| 收付款明細 |      |          |
-|            |      |          |
-
-| 實體 | 屬性 | 範例資料 |
-| ---- | ---- | -------- |
-| 交易 |      |          |
-
-| 實體 | 屬性 | 範例資料 |
-| ---- | ---- | -------- |
-| 製造 |      |          |
-
-| 實體 | 屬性 | 範例資料 |
-| ---- | ---- | -------- |
-| 紀錄 |      |          |
+## 使用者說明
 
 ## Schema
 
@@ -1219,6 +1193,7 @@
 ### MariaDB Table Creation
 
 ```sql
+-- 建立員工資料表
 CREATE TABLE
     IF NOT EXISTS Employee (
         EmployeeID VARCHAR(11) NOT NULL,
@@ -1237,6 +1212,7 @@ CREATE TABLE
 ```
 
 ```sql
+-- 建立銀行資料表
 CREATE TABLE
     IF NOT EXISTS Bank (
         BankCode VARCHAR(7) NOT NULL,
@@ -1250,6 +1226,7 @@ CREATE TABLE
 ```
 
 ```sql
+-- 建立客戶資料表
 CREATE TABLE
     IF NOT EXISTS Customer (
         CustomerID VARCHAR(10) NOT NULL,
@@ -1260,6 +1237,7 @@ CREATE TABLE
 ```
 
 ```sql
+-- 建立供應商資料表
 CREATE TABLE
     IF NOT EXISTS Supplier (
         SupplierID VARCHAR(6) NOT NULL,
@@ -1270,6 +1248,7 @@ CREATE TABLE
 ```
 
 ```sql
+-- 建立物品類別資料表
 CREATE TABLE
     IF NOT EXISTS ItemCategory (
         ItemCategoryID VARCHAR(7) NOT NULL,
@@ -1280,6 +1259,7 @@ CREATE TABLE
 ```
 
 ```sql
+-- 建立倉庫資料表
 CREATE TABLE
     IF NOT EXISTS Warehouse (
         WarehouseID VARCHAR(7) NOT NULL,
@@ -1291,6 +1271,7 @@ CREATE TABLE
 ```
 
 ```sql
+-- 建立物品資料表
 CREATE TABLE
     IF NOT EXISTS Item (
         ItemID VARCHAR(15) NOT NULL,
@@ -1312,6 +1293,7 @@ CREATE TABLE
 ```
 
 ```sql
+-- 建立訂單資料表
 CREATE TABLE
     IF NOT EXISTS Orders (
         OrderNumber VARCHAR(12) NOT NULL,
@@ -1325,6 +1307,7 @@ CREATE TABLE
 ```
 
 ```sql
+-- 建立訂單明細資料表
 CREATE TABLE
     IF NOT EXISTS OrderDetail (
         DetailID VARCHAR(15) NOT NULL,
@@ -1342,6 +1325,7 @@ CREATE TABLE
 ```
 
 ```sql
+-- 建立收付款明細資料表
 CREATE TABLE
     IF NOT EXISTS PaymentDetail (
         BillNumber VARCHAR(10) NOT NULL,
@@ -1360,6 +1344,7 @@ CREATE TABLE
 ```
 
 ```sql
+-- 建立製造關聯資料表
 CREATE TABLE
     IF NOT EXISTS Manufacturing (
         EmployeeID VARCHAR(11) NOT NULL,
@@ -1373,7 +1358,54 @@ CREATE TABLE
     );
 ```
 
-### 資料表結果圖
+### 新增資料
+
+範例資料可參考 [Reference data](./reference_data.md)
+
+| 實體 | 屬性   | 範例資料   |
+| ---- | ------ | ---------- |
+| 員工 | 員工ID | PDD-PM-100 |
+|      |        |            |
+
+| 實體 | 屬性 | 範例資料 |
+| ---- | ---- | -------- |
+| 銀行 |      |          |
+
+| 實體 | 屬性 | 範例資料 |
+| ---- | ---- | -------- |
+| 客戶 |      |          |
+
+| 實體   | 屬性 | 範例資料 |
+| ------ | ---- | -------- |
+| 供應商 |      |          |
+|        |      |          |
+
+| 實體 | 屬性 | 範例資料 |
+| ---- | ---- | -------- |
+| 物品 |      |          |
+
+| 實體       | 屬性 | 範例資料 |
+| ---------- | ---- | -------- |
+| 收付款明細 |      |          |
+|            |      |          |
+
+| 實體 | 屬性 | 範例資料 |
+| ---- | ---- | -------- |
+| 交易 |      |          |
+
+| 實體 | 屬性 | 範例資料 |
+| ---- | ---- | -------- |
+| 製造 |      |          |
+
+| 實體 | 屬性 | 範例資料 |
+| ---- | ---- | -------- |
+| 紀錄 |      |          |
+
+### 建立 View
+
+### 使用者建立及權限分配
+
+## 資料表結果圖
 
 ![資料表關聯圖](./document/Idef1xentityrelationshipdiagram1.png)
 
@@ -1410,3 +1442,5 @@ CREATE TABLE
 ## 參考資料
 
 1. [全國營業(稅籍)登記資料集](https://data.gov.tw/dataset/9400)
+2. [document_edit branch]: https://github.com/Breakwater39UwUb/mineral_management_system/tree/document_edit
+3. [version_3 branch]: https://github.com/Breakwater39UwUb/mineral_management_system/tree/version_3
