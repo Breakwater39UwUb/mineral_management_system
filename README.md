@@ -757,13 +757,14 @@
 物品ID範例: AAAAA0000000000
 
 <!-- TODO: 交易對象拆分為交易客戶與交易廠商的參考，只能存在一欄 -->
-| 實體 | 屬性     | Domain                                | 說明                                               |
-| ---- | -------- | ------------------------------------- | -------------------------------------------------- |
-| 訂單 | 訂單編號 | 格式為 `DATE-OrderId`                 | 每個訂單編號將由程式產生，由下單日為基礎產生       |
-|      |          | `[0-9]{8}-[A-Za-z0-9]{3}`             | 每日可記錄238328、每年8698972筆訂單                |
-|      | 付款日期 | 格式為 `yyyy-MM-dd`，不小公司建立日期 | 客戶付款日期，只記錄年月日                         |
-|      | 付款方式 | "匯款"或"付現"                        | 客戶付款方式，若為付現則`收付款明細`不紀錄銀行代號 |
-|      | 交易對象 | 參考 `客戶之客戶ID`                   | 下單客戶之客戶ID                                   |
+| 實體 | 屬性       | Domain                                | 說明                                                   |
+| ---- | ---------- | ------------------------------------- | ------------------------------------------------------ |
+| 訂單 | 訂單編號   | 格式為 `DATE-OrderId`                 | 每個訂單編號將由程式產生，由下單日為基礎產生           |
+|      |            | `[0-9]{8}-[A-Za-z0-9]{3}`             | 每日可記錄238328、每年8698972筆訂單                    |
+|      | 付款日期   | 格式為 `yyyy-MM-dd`，不小公司建立日期 | 客戶付款日期，只記錄年月日                             |
+|      | 付款方式   | "匯款"或"付現"                        | 客戶付款方式，若為付現則`收付款明細`不紀錄銀行代號     |
+|      | 交易客戶   | 參考 `客戶之客戶ID`                   | 下單客戶之客戶ID，若`交易供應商`為空，此項目不可為空   |
+|      | 交易供應商 | 參考 `供應商實體之供應商ID`           | 進貨供應商之供應商ID，若`交易客戶`為空，此項目不可為空 |
 
 訂單編號範例: 20240101-Aa0
 
@@ -1414,11 +1415,13 @@
         OrderNumber: string,
         PaymentDate: date,
         PaymentMethod: string,
-        TransactionParty: string,
+        TransactionCustomer: string,
+        TransactionSupplier: string,
         EmployeeInCharge: string
     )
     Primary Key: OrderNumber
-    Foreign Key: TransactionParty References Customer
+    Foreign Key: TransactionCustomer References Customer
+    Foreign Key: TransactionSupplier References Supplier
     Foreign Key: responsEmployee References Employee
     ```
 
