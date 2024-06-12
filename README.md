@@ -1393,13 +1393,13 @@
     ```sql
     Item (
         ItemID: string,
-        ItemCategoryID: string,
+        ItemCategoryID: string, -- 包含關係
         ItemName: string,
         ItemQuantity: float,
         QuantityUnit: string,
         ItemPrice: integer,
         Usage: string,
-        StorageLocation: string,
+        StorageLocation: string,    -- 存放關係
         Supplier: string
     )
     Primary Key: ItemID
@@ -1415,14 +1415,14 @@
         OrderNumber: string,
         PaymentDate: date,
         PaymentMethod: string,
-        TransactionCustomer: string,
-        TransactionSupplier: string,
-        EmployeeInCharge: string
+        Customer: string,   -- 下單關係
+        Supplier: string,   -- 供應關係
+        EmployeeInCharge: string    -- 訂單處理關係
     )
     Primary Key: OrderNumber
     Foreign Key: TransactionCustomer References Customer
     Foreign Key: TransactionSupplier References Supplier
-    Foreign Key: responsEmployee References Employee
+    Foreign Key: EmployeeInCharge References Employee
     ```
 
 9. 訂單明細
@@ -1430,10 +1430,10 @@
     ```sql
     OrderDetail (
         DetailID: string,
-        OrderNumber: string,
-        TransactionItem: string,
-        TransactionQuantity: float,
-        QuantityUnit: string
+        OrderNumber: string,    -- 產生關係
+        TransactionItem: string,    -- 出貨關係
+        Quantity: float,
+        Unit: string
     )
     Primary Key: DetailID
     Foreign Key: OrderNumber References Orders
@@ -1446,10 +1446,11 @@
     PaymentDetail (
         BillNumber: string,
         OrderNumber: string,
-        BankCode: string,
+        BankCode: string,   -- 確認關係
         BankAccount: string,
         TransactionDate: date,
-        Amount: integer
+        Amount: integer,
+        RecordEmployee: string    -- 紀錄關係
     )
     Primary Key: BillNumber
     Foreign Key: OrderNumber References Orders
@@ -1459,6 +1460,7 @@
 11. 製造
 
     ```sql
+    -- 製造關係
     Manufacturing (
         EmployeeID: string,
         ItemID: string,
@@ -1579,7 +1581,6 @@ CREATE TABLE
         ItemPrice INT NOT NULL DEFAULT 0,
         `Usage` VARCHAR(50) DEFAULT NULL,
         StorageLocation VARCHAR(7) NOT NULL,
-        PurchaseDate DATE DEFAULT NULL,
         Supplier VARCHAR(6) NOT NULL,
         PRIMARY KEY (ItemID),
         FOREIGN KEY (ItemCategoryID) REFERENCES ItemCategory (ItemCategoryID),
@@ -1599,11 +1600,13 @@ CREATE TABLE
         OrderNumber VARCHAR(12) NOT NULL,
         PaymentDate DATE,
         PaymentMethod VARCHAR(2) NOT NULL,
-        Customer VARCHAR(10),
-        Supplier VARCHAR(6),
+        Customer VARCHAR(10),   -- 下單關係
+        Supplier VARCHAR(6),    -- 供應關係,
+        EmployeeInCharge VARCHAR(11) NOT NULL,    -- 訂單處理關係
         PRIMARY KEY (OrderNumber),
         FOREIGN KEY (Customer) REFERENCES Customer (CustomerID),
         FOREIGN KEY (Supplier) REFERENCES Supplier (SupplierID),
+        FOREIGN KEY (EmployeeInCharge) REFERENCES Employee(EmployeeID),
         CONSTRAINT check_order_number CHECK (
             OrderNumber REGEXP '^[0-9]{8}-[A-Za-z0-9]{3}$'
         ),
@@ -1622,7 +1625,7 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS OrderDetail (
         DetailID VARCHAR(15) NOT NULL,
-        OrderNumber VARCHAR(12) NOT NULL,
+        OrderNumber VARCHAR(12) NOT NULL,      -- 產生關係
         TransactionItem VARCHAR(15) NOT NULL,
         Quantity FLOAT NOT NULL,
         Unit VARCHAR(4) NOT NULL,
@@ -1648,9 +1651,11 @@ CREATE TABLE
         BankAccount VARCHAR(14),
         TransactionDate DATE,
         Amount INT NOT NULL,
+        RecordEmployee VARCHAR(11) NOT NULL,
         PRIMARY KEY (BillNumber),
         FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber),
         FOREIGN KEY (BankCode) REFERENCES Bank (BankCode),
+        FOREIGN KEY (RecordEmployee) REFERENCES Employee(EmployeeID),
         CONSTRAINT check_bill_number CHECK (
             BillNumber REGEXP '^[A-Za-z0-9]{3}-[0-9]{6}$'
         ),
