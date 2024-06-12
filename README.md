@@ -1477,6 +1477,48 @@ CREATE TABLE
 
 ### 使用者建立及權限分配
 
+Sure, here are all the possible company departments and positions, along with their corresponding database user permissions:
+Departments:
+ * Sales: Responsible for managing customer orders and relationships.
+ * Purchasing: Responsible for procuring goods and materials from suppliers.
+ * Production: Responsible for manufacturing and storing finished goods.
+ * Finance: Responsible for managing financial transactions, including payments and receipts.
+ * Inventory: Responsible for managing the company's inventory of goods and materials.
+ * Human Resources: Responsible for managing employee information and payroll.
+Positions:
+ * Sales Manager: Oversees the sales department and its employees.
+ * Sales Representative: Interacts with customers to generate sales leads and orders.
+ * Purchasing Manager: Oversees the purchasing department and its employees.
+ * Purchasing Agent: Researches and sources goods and materials from suppliers.
+ * Production Manager: Oversees the production department and its employees.
+ * Production Worker: Manufactures finished goods according to production plans.
+ * Accountant: Records and manages financial transactions.
+ * Inventory Manager: Oversees the inventory department and its employees.
+ * Inventory Clerk: Tracks and manages inventory levels.
+ * HR Manager: Oversees the HR department and its employees.
+ * HR Specialist: Handles employee onboarding, payroll, and benefits.
+Database User Permissions:
+Based on the provided system requirements document, here's a breakdown of the database user permissions for each department and position:
+Sales Department:
+ * Sales Manager: Can view, create, modify, and delete all sales orders and customer information.
+ * Sales Representative: Can view, create, and modify sales orders for their assigned customers. Can view customer information.
+Purchasing Department:
+ * Purchasing Manager: Can view, create, modify, and delete all purchase orders and supplier information.
+ * Purchasing Agent: Can view, create, and modify purchase orders. Can view supplier information.
+Production Department:
+ * Production Manager: Can view, create, and modify production plans and inventory records. Can view employee information for production workers.
+ * Production Worker: Can view production plans for their assigned tasks. Can record production output.
+Finance Department:
+ * Accountant: Can view, create, and modify all financial transactions, including payments and receipts.
+ * Bookkeeper: Can view and record financial transactions.
+Inventory Department:
+ * Inventory Manager: Can view, create, modify, and delete all inventory records.
+ * Inventory Clerk: Can view and modify inventory records.
+HR Department:
+ * HR Manager: Can view, create, modify, and delete all employee information.
+ * HR Specialist: Can view and modify employee information. Can process payroll.
+Please note that these are just general guidelines, and the specific permissions for each position may vary depending on the company's specific needs.
+
 ## 資料表結果圖
 
 ![資料表關聯圖](./document/Idef1xentityrelationshipdiagram1.png)
