@@ -1301,7 +1301,7 @@
     WHERE orders.PaymentDate IS NULL;
     ```
 
-12. 列出所有淤期未付款訂單
+12. 列出所有逾期未付款訂單
 
     ```sql
     CREATE VIEW v_overdue_order AS
@@ -1314,7 +1314,7 @@
     WHERE STR_TO_DATE(SUBSTRING(unpaid_order.OrderNumber, 1, 8), '%Y%m%d') < DATE_SUB(CURDATE(), INTERVAL 3 MONTH);
     ```
 
- 銷售可能需要列出所有訂單和負責的員工
+銷售可能需要列出所有訂單和負責的員工
 
 ## 使用者說明
 
@@ -1326,19 +1326,21 @@
 
     ```sql
     Employee (
-        EmployeeID: string，
-        Department: string，
-        Position: string，
-        EmployeeName: string
+        EmployeeID: string,
+        Department: string,
+        Position: string,
+        EmployeeName: string,
+        EmployeeEmail: string
     )
     Primary Key: EmployeeID
+    Alternate Key: EmployeeEmail
     ```
 
 2. 銀行
 
     ```sql
     Bank (
-        BankCode: string，
+        BankCode: string,
         BankName: string
     )
     Primary Key: BankCode
@@ -1348,27 +1350,31 @@
 
     ```sql
     Customer (
-        CustomerID: string，
-        CustomerName: string
+        CustomerID: string,
+        CustomerName: string,
+        CustomerEmail: string
     )
     Primary Key: CustomerID
+    Alternate Key: CustomerEmail
     ```
 
 4. 供應商
 
     ```sql
     Supplier (
-        SupplierID: string，
+        SupplierID: string,
         SupplierName: string
+        SupplierEmail: string
     )
     Primary Key: SupplierID
+    Alternate Key: SupplierEmail
     ```
 
 5. 物品類別
 
     ```sql
     ItemCategory (
-        ItemCategoryID: string，
+        ItemCategoryID: string,
         CategoryDescription: string
     )
     Primary Key: ItemCategoryID
@@ -1378,8 +1384,8 @@
 
     ```sql
     Warehouse (
-        WarehouseID: string，
-        WarehouseAddress: string，
+        WarehouseID: string,
+        WarehouseAddress: string,
         WarehouseNote: string
     )
     Primary Key: WarehouseID
@@ -1389,15 +1395,14 @@
 
     ```sql
     Item (
-        ItemID: string，
-        ItemCategoryID: string，
-        ItemName: string，
-        ItemQuantity: float，
-        QuantityUnit: string，
-        ItemPrice: integer，
-        Usage: string，
-        StorageLocation: string，
-        PurchaseDate: date，
+        ItemID: string,
+        ItemCategoryID: string,
+        ItemName: string,
+        ItemQuantity: float,
+        QuantityUnit: string,
+        ItemPrice: integer,
+        Usage: string,
+        StorageLocation: string,
         Supplier: string
     )
     Primary Key: ItemID
@@ -1410,23 +1415,25 @@
 
     ```sql
     Orders (
-        OrderNumber: string，
-        PaymentDate: date，
-        PaymentMethod: string，
-        TransactionParty: string
+        OrderNumber: string,
+        PaymentDate: date,
+        PaymentMethod: string,
+        TransactionParty: string,
+        EmployeeInCharge: string
     )
     Primary Key: OrderNumber
     Foreign Key: TransactionParty References Customer
+    Foreign Key: responsEmployee References Employee
     ```
 
 9. 訂單明細
 
     ```sql
     OrderDetail (
-        DetailID: string，
-        OrderNumber: string，
-        TransactionItem: string，
-        TransactionQuantity: float，
+        DetailID: string,
+        OrderNumber: string,
+        TransactionItem: string,
+        TransactionQuantity: float,
         QuantityUnit: string
     )
     Primary Key: DetailID
@@ -1438,12 +1445,12 @@
 
     ```sql
     PaymentDetail (
-        BillNumber: string，
-        OrderNumber: string，
-        TransactionParty: string，
-        BankCode: string，
-        BankAccount: string，
-        TransactionDate: date，
+        BillNumber: string,
+        OrderNumber: string,
+        TransactionParty: string,
+        BankCode: string,
+        BankAccount: string,
+        TransactionDate: date,
         Amount: integer
     )
     Primary Key: BillNumber
@@ -1456,13 +1463,13 @@
 
     ```sql
     Manufacturing (
-        EmployeeID: string，
-        ItemID: string，
-        ManufacturingQuantity: float，
-        SalesCost: integer，
+        EmployeeID: string,
+        ItemID: string,
+        ManufacturingQuantity: float,
+        FixCost: integer,
         ManufacturingDate: date
     )
-    Primary Key: (EmployeeID， ItemID)
+    Primary Key: (EmployeeID, ItemID)
     Foreign Key: EmployeeID References Employee
     Foreign Key: ItemID References Item
     ```
@@ -1473,13 +1480,13 @@
 -- 建立員工資料表
 CREATE TABLE
     IF NOT EXISTS Employee (
-        EmployeeID VARCHAR(11) NOT NULL，
-        Department VARCHAR(10) NOT NULL，
-        Position VARCHAR(10) NOT NULL，
-        EmployeeName VARCHAR(10) NOT NULL，
-        PRIMARY KEY (EmployeeID)，
+        EmployeeID VARCHAR(11) NOT NULL,
+        Department VARCHAR(10) NOT NULL,
+        Position VARCHAR(10) NOT NULL,
+        EmployeeName VARCHAR(10) NOT NULL,
+        PRIMARY KEY (EmployeeID),
         CONSTRAINT check_employee CHECK (
-            EmployeeID REGEXP '[A-Z]{1，3}-[A-Z]{1，3}-[A-Z0-9]{3}'
+            EmployeeID REGEXP '[A-Z]{1,3}-[A-Z]{1,3}-[A-Z0-9]{3}'
             AND LENGTH (EmployeeID) != 0
             AND LENGTH (Department) != 0
             AND LENGTH (Position) != 0
@@ -1492,9 +1499,9 @@ CREATE TABLE
 -- 建立銀行資料表
 CREATE TABLE
     IF NOT EXISTS Bank (
-        BankCode VARCHAR(7) NOT NULL，
-        BankName VARCHAR(30) NOT NULL，
-        PRIMARY KEY (BankCode)，
+        BankCode VARCHAR(7) NOT NULL,
+        BankName VARCHAR(30) NOT NULL,
+        PRIMARY KEY (BankCode),
         CONSTRAINT check_bank CHECK (
             BankCode REGEXP '[0-9]{3}'
             OR BankCode REGEXP '[0-9]{7}'
@@ -1506,9 +1513,9 @@ CREATE TABLE
 -- 建立客戶資料表
 CREATE TABLE
     IF NOT EXISTS Customer (
-        CustomerID VARCHAR(10) NOT NULL，
-        CustomerName VARCHAR(30) NOT NULL，
-        PRIMARY KEY (CustomerID)，
+        CustomerID VARCHAR(10) NOT NULL,
+        CustomerName VARCHAR(30) NOT NULL,
+        PRIMARY KEY (CustomerID),
         CONSTRAINT check_customer CHECK (CustomerID REGEXP 'CLIENT-[A-Z0-9]{3}')
     );
 ```
@@ -1517,9 +1524,9 @@ CREATE TABLE
 -- 建立供應商資料表
 CREATE TABLE
     IF NOT EXISTS Supplier (
-        SupplierID VARCHAR(6) NOT NULL，
-        SupplierName VARCHAR(50) NOT NULL，
-        PRIMARY KEY (SupplierID)，
+        SupplierID VARCHAR(6) NOT NULL,
+        SupplierName VARCHAR(50) NOT NULL,
+        PRIMARY KEY (SupplierID),
         CONSTRAINT check_supplier CHECK (SupplierID REGEXP 'SUP-[A-Z0-9]{2}')
     );
 ```
@@ -1528,9 +1535,9 @@ CREATE TABLE
 -- 建立物品類別資料表
 CREATE TABLE
     IF NOT EXISTS ItemCategory (
-        ItemCategoryID VARCHAR(7) NOT NULL，
-        CategoryDescription VARCHAR(10) NOT NULL DEFAULT '未分類'，
-        PRIMARY KEY (ItemCategoryID)，
+        ItemCategoryID VARCHAR(7) NOT NULL,
+        CategoryDescription VARCHAR(10) NOT NULL DEFAULT '未分類',
+        PRIMARY KEY (ItemCategoryID),
         CONSTRAINT check_category CHECK (ItemCategoryID REGEXP 'CAT-[0-9]{3}')
     );
 ```
@@ -1539,10 +1546,10 @@ CREATE TABLE
 -- 建立倉庫資料表
 CREATE TABLE
     IF NOT EXISTS Warehouse (
-        WarehouseID VARCHAR(7) NOT NULL，
-        WarehouseAddress VARCHAR(70) NOT NULL，
-        WarehouseNote VARCHAR(100)，
-        PRIMARY KEY (WarehouseID)，
+        WarehouseID VARCHAR(7) NOT NULL,
+        WarehouseAddress VARCHAR(70) NOT NULL,
+        WarehouseNote VARCHAR(100),
+        PRIMARY KEY (WarehouseID),
         CONSTRAINT check_warehouse CHECK (WarehouseID REGEXP 'WH-[0-9]{4}')
     );
 ```
@@ -1551,20 +1558,20 @@ CREATE TABLE
 -- 建立物品資料表
 CREATE TABLE
     IF NOT EXISTS Item (
-        ItemID VARCHAR(15) NOT NULL，
-        ItemCategoryID VARCHAR(7) NOT NULL，
-        ItemName VARCHAR(50) NOT NULL，
-        ItemQuantity FLOAT NOT NULL DEFAULT 0.0，
-        QuantityUnit VARCHAR(4) NOT NULL，
-        ItemPrice INT NOT NULL DEFAULT 0，
-        `Usage` VARCHAR(50) DEFAULT NULL，
-        StorageLocation VARCHAR(7) NOT NULL，
-        PurchaseDate DATE DEFAULT NULL，
-        Supplier VARCHAR(6) NOT NULL，
-        PRIMARY KEY (ItemID)，
-        FOREIGN KEY (ItemCategoryID) REFERENCES ItemCategory (ItemCategoryID)，
-        FOREIGN KEY (StorageLocation) REFERENCES Warehouse (WarehouseID)，
-        FOREIGN KEY (Supplier) REFERENCES Supplier (SupplierID)，
+        ItemID VARCHAR(15) NOT NULL,
+        ItemCategoryID VARCHAR(7) NOT NULL,
+        ItemName VARCHAR(50) NOT NULL,
+        ItemQuantity FLOAT NOT NULL DEFAULT 0.0,
+        QuantityUnit VARCHAR(4) NOT NULL,
+        ItemPrice INT NOT NULL DEFAULT 0,
+        `Usage` VARCHAR(50) DEFAULT NULL,
+        StorageLocation VARCHAR(7) NOT NULL,
+        PurchaseDate DATE DEFAULT NULL,
+        Supplier VARCHAR(6) NOT NULL,
+        PRIMARY KEY (ItemID),
+        FOREIGN KEY (ItemCategoryID) REFERENCES ItemCategory (ItemCategoryID),
+        FOREIGN KEY (StorageLocation) REFERENCES Warehouse (WarehouseID),
+        FOREIGN KEY (Supplier) REFERENCES Supplier (SupplierID),
         CONSTRAINT check_item CHECK (ItemID REGEXP '[A-Z]{5}[0-9]{10}')
     );
 ```
@@ -1573,12 +1580,12 @@ CREATE TABLE
 -- 建立訂單資料表
 CREATE TABLE
     IF NOT EXISTS Orders (
-        OrderNumber VARCHAR(12) NOT NULL，
-        PaymentDate DATE DEFAULT NULL，
-        PaymentMethod VARCHAR(2) NOT NULL，
-        TransactionParty VARCHAR(10) NOT NULL，
-        PRIMARY KEY (OrderNumber)，
-        FOREIGN KEY (TransactionParty) REFERENCES Customer (CustomerID)，
+        OrderNumber VARCHAR(12) NOT NULL,
+        PaymentDate DATE DEFAULT NULL,
+        PaymentMethod VARCHAR(2) NOT NULL,
+        TransactionParty VARCHAR(10) NOT NULL,
+        PRIMARY KEY (OrderNumber),
+        FOREIGN KEY (TransactionParty) REFERENCES Customer (CustomerID),
         CONSTRAINT check_order CHECK (OrderNumber REGEXP '[0-9]{8}-[A-Za-z0-9]{3}')
     );
 ```
@@ -1587,14 +1594,14 @@ CREATE TABLE
 -- 建立訂單明細資料表
 CREATE TABLE
     IF NOT EXISTS OrderDetail (
-        DetailID VARCHAR(15) NOT NULL，
-        OrderNumber VARCHAR(12) NOT NULL，
-        TransactionItem VARCHAR(15) NOT NULL，
-        TransactionQuantity FLOAT NOT NULL，
-        QuantityUnit VARCHAR(4) NOT NULL，
-        PRIMARY KEY (DetailID)，
-        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber)，
-        FOREIGN KEY (TransactionItem) REFERENCES Item (ItemID)，
+        DetailID VARCHAR(15) NOT NULL,
+        OrderNumber VARCHAR(12) NOT NULL,
+        TransactionItem VARCHAR(15) NOT NULL,
+        TransactionQuantity FLOAT NOT NULL,
+        QuantityUnit VARCHAR(4) NOT NULL,
+        PRIMARY KEY (DetailID),
+        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber),
+        FOREIGN KEY (TransactionItem) REFERENCES Item (ItemID),
         CONSTRAINT check_orderdetail CHECK (
             DetailID REGEXP '[0-9]{8}-[A-Za-z0-9]{3}-[0-9]{2}'
         )
@@ -1605,17 +1612,17 @@ CREATE TABLE
 -- 建立收付款明細資料表
 CREATE TABLE
     IF NOT EXISTS PaymentDetail (
-        BillNumber VARCHAR(10) NOT NULL，
-        OrderNumber VARCHAR(12) NOT NULL，
-        TransactionParty VARCHAR(10) NOT NULL，
-        BankCode VARCHAR(3)，
-        BankAccount VARCHAR(14)，
-        TransactionDate DATE DEFAULT NULL，
-        Amount INT NOT NULL，
-        PRIMARY KEY (BillNumber)，
-        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber)，
-        FOREIGN KEY (TransactionParty) REFERENCES Customer (CustomerID)，
-        FOREIGN KEY (BankCode) REFERENCES Bank (BankCode)，
+        BillNumber VARCHAR(10) NOT NULL,
+        OrderNumber VARCHAR(12) NOT NULL,
+        TransactionParty VARCHAR(10) NOT NULL,
+        BankCode VARCHAR(3),
+        BankAccount VARCHAR(14),
+        TransactionDate DATE DEFAULT NULL,
+        Amount INT NOT NULL,
+        PRIMARY KEY (BillNumber),
+        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber),
+        FOREIGN KEY (TransactionParty) REFERENCES Customer (CustomerID),
+        FOREIGN KEY (BankCode) REFERENCES Bank (BankCode),
         CONSTRAINT check_paymentdetail CHECK (BillNumber REGEXP '[A-Za-z0-9]{3}-[0-9]{6}')
     );
 ```
@@ -1624,13 +1631,13 @@ CREATE TABLE
 -- 建立製造關聯資料表
 CREATE TABLE
     IF NOT EXISTS Manufacturing (
-        EmployeeID VARCHAR(11) NOT NULL，
-        ItemID VARCHAR(15) NOT NULL，
-        ManufacturingQuantity FLOAT NOT NULL，
-        SalesCost INT DEFAULT NULL，
-        ManufacturingDate DATE DEFAULT NULL，
-        PRIMARY KEY (EmployeeID， ItemID)，
-        FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID)，
+        EmployeeID VARCHAR(11) NOT NULL,
+        ItemID VARCHAR(15) NOT NULL,
+        ManufacturingQuantity FLOAT NOT NULL,
+        SalesCost INT DEFAULT NULL,
+        ManufacturingDate DATE DEFAULT NULL,
+        PRIMARY KEY (EmployeeID, ItemID),
+        FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID),
         FOREIGN KEY (ItemID) REFERENCES Item (ItemID)
     );
 ```
