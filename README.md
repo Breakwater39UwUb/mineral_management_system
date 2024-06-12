@@ -263,9 +263,9 @@
        1. `local-part`與`domain`以 `@`分隔
        2. `local-part` 為小於64個字元之字串，只能包含大小寫字母、0~9、特殊字元 ``!#$%&'*+-/=?^_`{|}~``
        3. `domain`由三個標籤組成，每個標籤以`.`字元分隔，格式為 `third-level.second-level.top-level`
-          1. 每個標籤只能由大小寫字母、`-`字元與數字組成，且不超過63個字元
-          2. `top-level` 域名不可由數字開頭
-          3. `-`字元不可作為 `domain`的開頭與結尾
+          1. 每個標籤只能由大小寫字母、`-`字元與數字組成，`-`字元不可作為開頭與結尾，且不超過63個字元
+          2. 至少要有`top-level` 與 `second-level`
+          3. `top-level` 域名不可由數字開頭
        4. 舉例列於 [實體詳細說明](#實體詳細說明)
 
 5. 物品類別
@@ -435,14 +435,12 @@
 | 銀行 | 銀行代號 | Primary Key   |
 |      | 銀行名稱 | Alternate Key |
 
-<!-- TODO: 客戶增加EMAIL -->
 | 實體 | 屬性         | Key           |
 | ---- | ------------ | ------------- |
 | 客戶 | 客戶ID       | Primary Key   |
 |      | 客戶名稱     |               |
 |      | 客戶電子郵件 | Alternate Key |
 
-<!-- TODO: 供應商增加EMAIL -->
 | 實體   | 屬性           | Key           |
 | ------ | -------------- | ------------- |
 | 供應商 | 供應商ID       | Primary Key   |
@@ -460,27 +458,28 @@
 |      | 倉庫地址 | Alternate Key |
 |      | 倉庫備註 |               |
 
-| 實體   | 屬性       | Key           |
-| ------ | ---------- | ------------- |
-| 物品   | 物品ID     | Primary Key   |
-|        | 物品類別ID | Foreign Key   |
-|        | 物品名稱   | Alternate Key |
-|        | 物品數量   |               |
-|        | 數量單位   |               |
-|        | 物品單價   |               |
-|        | 用途       |               |
-|        | 存放地點   | Foreign Key   |
-| 已刪除 | ~~購置日期~~   |               |
-|        | 供應商     | Foreign Key   |
+| 實體   | 屬性         | Key           |
+| ------ | ------------ | ------------- |
+| 物品   | 物品ID       | Primary Key   |
+|        | 物品類別ID   | Foreign Key   |
+|        | 物品名稱     | Alternate Key |
+|        | 物品數量     |               |
+|        | 數量單位     |               |
+|        | 物品單價     |               |
+|        | 用途         |               |
+|        | 存放地點     | Foreign Key   |
+| 已刪除 | ~~購置日期~~ |               |
+|        | 供應商       | Foreign Key   |
 
 <!-- TODO: 交易對象拆分為交易客戶與交易廠商的參考，只能存在一欄 -->
-| 實體 | 屬性     | Key         |
-| ---- | -------- | ----------- |
-| 訂單 | 訂單編號 | Primary Key |
-|      | 下單日期 |             |
-|      | 付款日期 |             |
-|      | 付款方式 |             |
-|      | 交易對象 | Foreign Key |
+| 實體 | 屬性       | Key         |
+| ---- | ---------- | ----------- |
+| 訂單 | 訂單編號   | Primary Key |
+|      | 下單日期   |             |
+|      | 付款日期   |             |
+|      | 付款方式   |             |
+|      | 交易客戶   | Foreign Key |
+|      | 交易供應商 | Foreign Key |
 
 | 實體     | 屬性     | Key         |
 | -------- | -------- | ----------- |
@@ -647,16 +646,19 @@
 
 ### 實體詳細說明
 
-| 實體 | 屬性   | Key         | Domain                                | 說明                                                   |
-| ---- | ------ | ----------- | ------------------------------------- | ------------------------------------------------------ |
-| 員工 | 員工ID | Primary Key | 格式為 `DEP-POS-ID`                   | 員工的ID，`DEP` 代表部門、`POS` 代表職位、`ID`為編號。 |
-|      |        |             | `^[A-Z]{1，3}-[A-Z]{1，3}-[A-Z0-9]{3}$` | 部門、職位依據員工實際資料，編號由程式產生。           |
-|      |        |             |                                       | `ID` 能為各部門的不同職位提供 46656 個員工ID。         |
-|      | 姓名   |             | 長度為10的中文字串                    | 員工的姓名。                                           |
-|      | 部門   |             | 長度為10的中文字串                    | 員工部門，該部門需存在於公司中。                       |
-|      | 職位   |             | 長度為10的中文字串                    | 員工職位，該職位需存在於公司中。                       |
+| 實體 | 屬性         | Key           | Domain                                              | 說明                                                                        |
+| ---- | ------------ | ------------- | --------------------------------------------------- | --------------------------------------------------------------------------- |
+| 員工 | 員工ID       | Primary Key   | 格式為 `DEP-POS-ID`                                 | 員工的ID，`DEP` 代表部門、`POS` 代表職位、`ID`為編號。                      |
+|      |              |               | `^[A-Z]{1，3}-[A-Z]{1，3}-[A-Z0-9]{3}$`             | 部門、職位依據員工實際資料，編號由程式產生。                                |
+|      |              |               |                                                     | `ID` 能為各部門的不同職位提供 46656 個員工ID。                              |
+|      | 姓名         |               | 長度為10的中文字串                                  | 員工的姓名。                                                                |
+|      | 部門         |               | 長度為10的中文字串                                  | 員工部門，該部門需存在於公司中。                                            |
+|      | 職位         |               | 長度為10的中文字串                                  | 員工職位，該職位需存在於公司中。                                            |
+|      | 員工電子郵件 | Alternate Key | 格式為 `DEP-POS-ID@company.com`                     | 以`員工ID`為地址(local part)建立的電子郵件，域名(domain)皆為 `@company.com` |
+|      |              |               | `^[A-Z]{1，3}-[A-Z]{1，3}-[A-Z0-9]{3}@company.com$` | 此電子郵件在編入`員工ID`時建立                                              |
 
-員工ID範例: POD-BL-A00
+- 員工ID範例: POD-BL-A00
+- 員工電子郵件範例: <POD-BL-A00@company.com>
 
 部門縮寫範例
 
@@ -681,32 +683,40 @@
 9. `CH`: Chemist， 化學家
 10. `GE`: Geological Engineer， 地質工程師
 
-| 實體 | 屬性     | Domain                                 | 說明                                                                                     |
-| ---- | -------- | -------------------------------------- | ---------------------------------------------------------------------------------------- |
-| 銀行 | 銀行代號 | 格式為 `金融機構總代號` `分支機構代號` | 客戶付款的銀行帳號代碼                                                                   |
-|      |          | `^([0-9]{3}\|[0-9]{7})$`               | 通常只需`銀行代號`(金融機構總代號)，在填入`分支代號`(分支機構代號)時，需確認是否有總代號 |
-|      |          |                                        | 最後將與銀行列表確認是否為合法代碼，若不存在則為錯誤代號。                               |
-|      |          |                                        | 已蒐集之包含分支機構銀行列表總數，為5292間                                               |
-|      | 銀行名稱 | 長度為30的中文字串                     | 由`金融機構總代號`或其`分支機構代號`對應之機構名稱，用於說明銀行代號                     |
+| 實體 | 屬性     | Domain                                 | 說明                                                                                                             |
+| ---- | -------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| 銀行 | 銀行代號 | 格式為 `金融機構總代號` `分支機構代號` | 客戶付款的銀行帳號代碼                                                                                           |
+|      |          | `^([0-9]{3}\|[0-9]{7})$`               | 通常只需`銀行代號`(金融機構總代號)，在填入`分支代號`(分支機構代號)時，需確認是否有總代號，因銀行分部代號不唯一。 |
+|      |          |                                        | 最後將與銀行列表確認是否為合法代碼，若不存在則為錯誤代號。                                                       |
+|      |          |                                        | 已蒐集之包含分支機構銀行列表總數，為5292間                                                                       |
+|      | 銀行名稱 | 長度為30的中文字串                     | 由`金融機構總代號`或其`分支機構代號`對應之機構名稱，用於說明銀行代號                                             |
 
-004可單獨輸入，代表臺灣銀行，0040093為臺灣銀行臺南分行。
-0093不可單獨使用，且銀行分部代號不唯一。
+- 004可單獨輸入，代表臺灣銀行，0040093為臺灣銀行臺南分行。
+- 0093不可單獨使用，因銀行分部代號不唯一。
 
-| 實體 | 屬性     | Domain                 | 說明                                               |
-| ---- | -------- | ---------------------- | -------------------------------------------------- |
-| 客戶 | 客戶ID   | 格式為 `Client-ID`     | 每位新客戶將由程式產生隨機`ID`並儲存至`客戶`資料表 |
-|      |          | `^CLIENT-[A-Z0-9]{3}$` | 此格式可記錄46656位客戶                            |
-|      | 客戶名稱 | 長度為30的中文字串     | 考慮可能為個人與法人(公司)而設定此長度             |
-
+| 實體 | 屬性         | Domain                                                                                                       | 說明                                               |
+| ---- | ------------ | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| 客戶 | 客戶ID       | 格式為 `Client-ID`                                                                                           | 每位新客戶將由程式產生隨機`ID`並儲存至`客戶`資料表 |
+|      |              | `^CLIENT-[A-Z0-9]{3}$`                                                                                       | 此格式可記錄46656位客戶                            |
+|      | 客戶名稱     | 長度為30的中文字串                                                                                           | 考慮可能為個人與法人(公司)而設定此長度             |
+|      | 客戶電子郵件 | 格式為 `local-part@domain`                                                                                   | 客服部門將透過此電子郵件聯絡客戶                   |
+|      |              | ``local-part = ^[a-zA-Z0-9!#$%&'*+-/=?^_`{\|}~]{1,64}``                                                      | 客戶電子郵件只接受yahoo、gmail、outlook、hotmail、ms live與msn信箱 |
+|      |              | ```domain  = (yahoo\.com\|yahoo\.com\.tw\|gmail\.com \| outlook\.com\|hotmail\.com\|live\.com\|msn\.com)$``` |                                                    |
+<!-- ^[a-zA-Z0-9!#$%&'*+\-\/=?^_`{|}~]{1,64}@(yahoo\.com|yahoo\.com\.tw|gmail\.com|outlook\.com|hotmail\.com|live\.com|msn\.com)$ -->
 客戶ID範例: CLIENT-A00
+客戶電子郵件範例: <41043152@gmail.com>
 
-| 實體   | 屬性       | Domain               | 說明                               |
-| ------ | ---------- | -------------------- | ---------------------------------- |
-| 供應商 | 供應商ID   | 格式為 `Supplier-ID` | 新合作的供應商，其ID由程式隨機產生 |
-|        |            | `^SUP-[A-Z0-9]{2}$`  | 此編號可記錄1296個合作供應商       |
-|        | 供應商名稱 | 長度為50的中文字串   | 需符合登記在經濟部公司法人名稱     |
-
+| 實體   | 屬性           | Domain                                                                    | 說明                               |
+| ------ | -------------- | ------------------------------------------------------------------------- | ---------------------------------- |
+| 供應商 | 供應商ID       | 格式為 `Supplier-ID`                                                      | 新合作的供應商，其ID由程式隨機產生 |
+|        |                | `^SUP-[A-Z0-9]{2}$`                                                       | 此編號可記錄1296個合作供應商       |
+|        | 供應商名稱     | 長度為50的中文字串                                                        | 需符合登記在經濟部公司法人名稱     |
+|        | 供應商電子郵件 | 格式為 `local-part@domain`                                                | 採購部門將透過此電子郵件聯絡供應商 |
+|        |                | local-part ``^(?=.{1,253}$)([a-zA-Z0-9!#$%&'*+\-\/=?^_`{\|}~]{1,64})``    | 網域將可接受大部分的公司電子郵件信箱|
+|        |                | domain ``((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+((?!-)[a-zA-Z-]{1,63}(?<!-))$`` |                                    |
+<!-- ^(?=.{1,253}$)([a-zA-Z0-9!#$%&'*+\-\/=?^_`{|}~]{1,64})@((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+((?!-)[a-zA-Z-]{1,63}(?<!-))$ -->
 供應商ID範例: SUP-A0
+客戶電子郵件範例: <GSS@gss.com.tw>
 
 | 實體     | 屬性       | Domain             | 說明                               |
 | -------- | ---------- | ------------------ | ---------------------------------- |
@@ -715,6 +725,7 @@
 |          | 類別說明   | 長度為10的中文字串 | 類別ID的說明欄為，說明該代號的類別 |
 
 物品類別ID範例: CAT-000
+客戶電子郵件範例: <a-company@mail.com.tw>
 
 類別說明範例
 
@@ -732,19 +743,19 @@
 
 倉庫ID範例: WH-0000
 
-| 實體 | 屬性       | Domain                                   | 說明                                                  |
-| ---- | ---------- | ---------------------------------------- | ----------------------------------------------------- |
-| 物品 | 物品ID     | `[A-Z]{5}[0-9]{10}`                      | 物品的編號，由程式產生                                |
-|      |            |                                          | 此格式可記錄11，881，376，000，000，000種物品              |
-|      | 物品類別ID | 長度為7的字串                            | 物品對應的類別所屬之類別ID                            |
-|      | 物品名稱   | 長度為50的字串                           | 物品類別，由類別判斷是否為商品，參考 `物品類別ID`     |
-|      | 物品數量   | 正浮點數                                 | 使用正浮點數可應對不同單位的計數，可數物品則小數只為0 |
-|      | 數量單位   | 公斤、公尺、立方公尺、平方公尺、個、單位 | 依照物品類別使用對應的單位                            |
-|      | 物品單價   | 正整數                                   | 物品為商品時，指物品售價；否則為購入的物品單價        |
-|      | 用途       | 長度為50的字串                           | 物品之說明欄位                                        |
-|      | 存放地點   | 長度為7的字串，參考`倉庫之倉庫ID`        | 物品存放地點                                          |
-|      | 購置日期   | 格式為 `yyyy-MM-dd`，不小公司建立日期    | 物品之購入日期                                        |
-|      | 供應商     | 長度為6的字串， 參考`供應商之供應商ID`    | 購入物品之供應商，物品為商品時，此欄位為空            |
+| 實體 | 屬性         | Domain                                   | 說明                                                  |
+| ---- | ------------ | ---------------------------------------- | ----------------------------------------------------- |
+| 物品 | 物品ID       | `[A-Z]{5}[0-9]{10}`                      | 物品的編號，由程式產生                                |
+|      |              |                                          | 此格式可記錄11，881，376，000，000，000種物品         |
+|      | 物品類別ID   | 長度為7的字串                            | 物品對應的類別所屬之類別ID                            |
+|      | 物品名稱     | 長度為50的字串                           | 物品類別，由類別判斷是否為商品，參考 `物品類別ID`     |
+|      | 物品數量     | 正浮點數                                 | 使用正浮點數可應對不同單位的計數，可數物品則小數只為0 |
+|      | 數量單位     | 公斤、公尺、立方公尺、平方公尺、個、單位 | 依照物品類別使用對應的單位                            |
+|      | 物品單價     | 正整數                                   | 物品為商品時，指物品售價；否則為購入的物品單價        |
+|      | 用途         | 長度為50的字串                           | 物品之說明欄位                                        |
+|      | 存放地點     | 長度為7的字串，參考`倉庫之倉庫ID`        | 物品存放地點                                          |
+| 刪除 | ~~購置日期~~ | 格式為 `yyyy-MM-dd`，不小公司建立日期    | 物品之購入日期                                        |
+|      | 供應商       | 長度為6的字串， 參考`供應商之供應商ID`   | 購入物品之供應商，物品為商品時，此欄位為空            |
 
 物品ID範例: AAAAA0000000000
 
@@ -1110,6 +1121,200 @@
     > 如果您有更多關於SQL或數據庫設計的問題，請隨時提問！
 
 ## View 說明
+
+1. 列出類別為CAT-000的物品
+
+    ```sql
+    CREATE VIEW v_item_none AS
+    SELECT 
+        Item.ItemID,
+        Item.ItemName,
+        Item.ItemQuantity,
+        Item.QuantityUnit,
+        Item.ItemPrice,
+        Item.Usage,
+        Item.StorageLocation,
+        Item.Supplier
+    FROM Item
+    WHERE Item.ItemCategoryID = 'CAT-000';
+    ```
+
+2. 列出類別為CAT-001的物品
+
+    ```sql
+    CREATE VIEW v_item_ore AS
+    SELECT 
+        Item.ItemID,
+        Item.ItemName,
+        Item.ItemQuantity,
+        Item.QuantityUnit,
+        Item.ItemPrice,
+        Item.Usage,
+        Item.StorageLocation,
+        Item.Supplier
+    FROM Item
+    WHERE Item.ItemCategoryID = 'CAT-001';
+    ```
+
+3. 列出類別為CAT-002的物品
+
+    ```sql
+    CREATE VIEW v_item_tool AS
+    SELECT 
+        Item.ItemID,
+        Item.ItemName,
+        Item.ItemQuantity,
+        Item.QuantityUnit,
+        Item.ItemPrice,
+        Item.Usage,
+        Item.StorageLocation,
+        Item.Supplier
+    FROM Item
+    WHERE Item.ItemCategoryID = 'CAT-002';
+    ```
+
+4. 列出類別為CAT-003的物品
+
+    ```sql
+    CREATE VIEW v_item_material AS
+    SELECT 
+        Item.ItemID,
+        Item.ItemName,
+        Item.ItemQuantity,
+        Item.QuantityUnit,
+        Item.ItemPrice,
+        Item.Usage,
+        Item.StorageLocation,
+        Item.Supplier
+    FROM Item
+    WHERE Item.ItemCategoryID = 'CAT-003';
+    ```
+
+5. 列出類別為CAT-004的物品
+
+    ```sql
+    CREATE VIEW v_item_scrap AS
+    SELECT 
+        Item.ItemID,
+        Item.ItemName,
+        Item.ItemQuantity,
+        Item.QuantityUnit,
+        Item.ItemPrice,
+        Item.Usage,
+        Item.StorageLocation,
+        Item.Supplier
+    FROM Item
+    WHERE Item.ItemCategoryID = 'CAT-004';
+    ```
+
+6. 列出類別為CAT-005的物品
+
+    ```sql
+    CREATE VIEW v_item_processed_products AS
+    SELECT 
+        Item.ItemID,
+        Item.ItemName,
+        Item.ItemQuantity,
+        Item.QuantityUnit,
+        Item.ItemPrice,
+        Item.Usage,
+        Item.StorageLocation,
+        Item.Supplier
+    FROM Item
+    WHERE Item.ItemCategoryID = 'CAT-005';
+    ```
+
+7. 列出類別為CAT-006的物品
+
+    ```sql
+    CREATE VIEW v_item_gem AS
+    SELECT 
+        Item.ItemID,
+        Item.ItemName,
+        Item.ItemQuantity,
+        Item.QuantityUnit,
+        Item.ItemPrice,
+        Item.Usage,
+        Item.StorageLocation,
+        Item.Supplier
+    FROM Item
+    WHERE Item.ItemCategoryID = 'CAT-006';
+    ```
+
+8. 列出倉庫為WH-0001的物品
+
+    ```sql
+    CREATE VIEW v_wh_0001 AS
+    SELECT 
+        Item.ItemID,
+        Item.ItemName,
+        Item.ItemQuantity,
+        Item.QuantityUnit,
+        Item.ItemPrice,
+        Item.Usage,
+        Item.StorageLocation,
+        Item.Supplier
+    FROM Item
+    WHERE Item.StorageLocation = 'WH-0001';
+    ```
+
+9. 列出倉庫為WH-0002的物品
+
+    ```sql
+    CREATE VIEW v_wh_0002 AS
+    SELECT 
+        Item.ItemID,
+        Item.ItemName,
+        Item.ItemQuantity,
+        Item.QuantityUnit,
+        Item.ItemPrice,
+        Item.Usage,
+        Item.StorageLocation,
+        Item.Supplier
+    FROM Item
+    WHERE Item.StorageLocation = 'WH-0002';
+    ```
+
+10. 列出倉庫為WH-0003的物品
+
+    ```sql
+    CREATE VIEW v_wh_0003 AS
+    SELECT 
+        Item.ItemID,
+        Item.ItemName,
+        Item.ItemQuantity,
+        Item.QuantityUnit,
+        Item.ItemPrice,
+        Item.Usage,
+        Item.StorageLocation,
+        Item.Supplier
+    FROM Item
+    WHERE Item.StorageLocation = 'WH-0003';
+    ```
+
+11. 列出所有未付款訂單
+
+    ```sql
+    CREATE VIEW v_unpaid_order AS
+    SELECT orders.OrderNumber, orders.TransactionParty
+    FROM orders
+    WHERE orders.PaymentDate IS NULL;
+    ```
+
+12. 列出所有淤期未付款訂單
+
+    ```sql
+    CREATE VIEW v_overdue_order AS
+    SELECT unpaid_order.OrderNumber, unpaid_order.TransactionParty
+    FROM (
+        SELECT orders.OrderNumber, orders.TransactionParty
+        FROM orders
+        WHERE orders.PaymentDate IS NULL
+    ) AS unpaid_order
+    WHERE STR_TO_DATE(SUBSTRING(unpaid_order.OrderNumber, 1, 8), '%Y%m%d') < DATE_SUB(CURDATE(), INTERVAL 3 MONTH);
+    ```
+
+ 銷售可能需要列出所有訂單和負責的員工
 
 ## 使用者說明
 
@@ -1479,44 +1684,61 @@ CREATE TABLE
 
 Sure, here are all the possible company departments and positions, along with their corresponding database user permissions:
 Departments:
- * Sales: Responsible for managing customer orders and relationships.
- * Purchasing: Responsible for procuring goods and materials from suppliers.
- * Production: Responsible for manufacturing and storing finished goods.
- * Finance: Responsible for managing financial transactions, including payments and receipts.
- * Inventory: Responsible for managing the company's inventory of goods and materials.
- * Human Resources: Responsible for managing employee information and payroll.
+
+- Sales: Responsible for managing customer orders and relationships.
+- Purchasing: Responsible for procuring goods and materials from suppliers.
+- Production: Responsible for manufacturing and storing finished goods.
+- Finance: Responsible for managing financial transactions, including payments and receipts.
+- Inventory: Responsible for managing the company's inventory of goods and materials.
+- Human Resources: Responsible for managing employee information and payroll.
+
 Positions:
- * Sales Manager: Oversees the sales department and its employees.
- * Sales Representative: Interacts with customers to generate sales leads and orders.
- * Purchasing Manager: Oversees the purchasing department and its employees.
- * Purchasing Agent: Researches and sources goods and materials from suppliers.
- * Production Manager: Oversees the production department and its employees.
- * Production Worker: Manufactures finished goods according to production plans.
- * Accountant: Records and manages financial transactions.
- * Inventory Manager: Oversees the inventory department and its employees.
- * Inventory Clerk: Tracks and manages inventory levels.
- * HR Manager: Oversees the HR department and its employees.
- * HR Specialist: Handles employee onboarding, payroll, and benefits.
+
+- Sales Manager: Oversees the sales department and its employees.
+- Sales Representative: Interacts with customers to generate sales leads and orders.
+- Purchasing Manager: Oversees the purchasing department and its employees.
+- Purchasing Agent: Researches and sources goods and materials from suppliers.
+- Production Manager: Oversees the production department and its employees.
+- Production Worker: Manufactures finished goods according to production plans.
+- Accountant: Records and manages financial transactions.
+- Inventory Manager: Oversees the inventory department and its employees.
+- Inventory Clerk: Tracks and manages inventory levels.
+- HR Manager: Oversees the HR department and its employees.
+- HR Specialist: Handles employee onboarding, payroll, and benefits.
+
 Database User Permissions:
 Based on the provided system requirements document, here's a breakdown of the database user permissions for each department and position:
+
 Sales Department:
- * Sales Manager: Can view, create, modify, and delete all sales orders and customer information.
- * Sales Representative: Can view, create, and modify sales orders for their assigned customers. Can view customer information.
+
+- Sales Manager: Can view, create, modify, and delete all sales orders and customer information.
+- Sales Representative: Can view, create, and modify sales orders for their assigned customers. Can view customer information.
+
 Purchasing Department:
- * Purchasing Manager: Can view, create, modify, and delete all purchase orders and supplier information.
- * Purchasing Agent: Can view, create, and modify purchase orders. Can view supplier information.
+
+- Purchasing Manager: Can view, create, modify, and delete all purchase orders and supplier information.
+- Purchasing Agent: Can view, create, and modify purchase orders. Can view supplier information.
+
 Production Department:
- * Production Manager: Can view, create, and modify production plans and inventory records. Can view employee information for production workers.
- * Production Worker: Can view production plans for their assigned tasks. Can record production output.
+
+- Production Manager: Can view, create, and modify production plans and inventory records. Can view employee information for production workers.
+- Production Worker: Can view production plans for their assigned tasks. Can record production output.
+
 Finance Department:
- * Accountant: Can view, create, and modify all financial transactions, including payments and receipts.
- * Bookkeeper: Can view and record financial transactions.
+
+- Accountant: Can view, create, and modify all financial transactions, including payments and receipts.
+- Bookkeeper: Can view and record financial transactions.
+
 Inventory Department:
- * Inventory Manager: Can view, create, modify, and delete all inventory records.
- * Inventory Clerk: Can view and modify inventory records.
+
+- Inventory Manager: Can view, create, modify, and delete all inventory records.
+- Inventory Clerk: Can view and modify inventory records.
+
 HR Department:
- * HR Manager: Can view, create, modify, and delete all employee information.
- * HR Specialist: Can view and modify employee information. Can process payroll.
+
+- HR Manager: Can view, create, modify, and delete all employee information.
+- HR Specialist: Can view and modify employee information. Can process payroll.
+
 Please note that these are just general guidelines, and the specific permissions for each position may vary depending on the company's specific needs.
 
 ## 資料表結果圖
