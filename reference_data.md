@@ -4,6 +4,8 @@
   - [公司部門範例與說明](#公司部門範例與說明)
   - [公司結構與部門功能問答](#公司結構與部門功能問答)
   - [從訂單編號取的下單日期並計算與今日的天數差距](#從訂單編號取的下單日期並計算與今日的天數差距)
+  - [polymorphic associations](#polymorphic-associations)
+  - [從訂單找交易對象](#從訂單找交易對象)
 
 ## 公司部門範例與說明
 
@@ -120,3 +122,84 @@ Please replace `'20240611-zF8'` with your actual `order_id` and `orders_table` w
 This query assumes that the date in the `order_id` is in the format `YYYYMMDD`. If the format is different, you would need to adjust the format string in the `STR_TO_DATE` function accordingly.
 
 Also, please note that SQL syntax can vary between different database systems. If you're not using MySQL, you might need to adjust the query to match your database system's syntax. For example, in PostgreSQL, you would use `CURRENT_DATE` instead of `CURDATE()`, and the date format string would be `'YYYYMMDD'` instead of `'%Y%m%d'`. If you're using a different database system and need help adjusting the query, please let me know.
+
+## polymorphic associations
+
+Q:
+
+In a database, can an attribute of a table reference 2 table?
+Here I have 2 entities, Client and Supplier, I want TransactionParty in Oders reference these 2 table.
+
+A:
+
+In a relational database, an attribute typically references a single table through a foreign key constraint. However, if you want the `TransactionParty` attribute in the `Orders` table to reference both `Customer` and `Supplier` tables, you cannot directly create two foreign key constraints on the same attribute referencing two different tables.
+
+To achieve this, you can use a design pattern known as **polymorphic associations**. Here's one way to implement it:
+
+1. Modify the `Orders` table to include two separate attributes for the foreign keys, one for customers and one for suppliers:
+
+    ```sql
+    Orders (
+        OrderNumber: string,
+        PaymentDate: date,
+        PaymentMethod: string,
+        CustomerID: string,
+        SupplierID: string
+    )
+    Primary Key: OrderNumber
+    Foreign Key: CustomerID References Customer
+    Foreign Key: SupplierID References Supplier
+    ```
+
+2. Allow `CustomerID` and `SupplierID` to be nullable, meaning an order can be associated with either a customer or a supplier, but not both at the same time.
+
+3. Add a check constraint to ensure that one and only one of `CustomerID` or `SupplierID` is non-null for each order.
+
+Here's how the modified SQL script might look:
+
+```sql
+CREATE TABLE Orders (
+    OrderNumber string NOT NULL,
+    PaymentDate date NOT NULL,
+    PaymentMethod string NOT NULL,
+    CustomerID string NULL,
+    SupplierID string NULL,
+    CONSTRAINT PK_Orders PRIMARY KEY (OrderNumber),
+    CONSTRAINT FK_Orders_Customer FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+    CONSTRAINT FK_Orders_Supplier FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID),
+    CONSTRAINT CHK_Orders_OneParty CHECK (
+        (CustomerID IS NOT NULL AND SupplierID IS NULL) OR
+        (CustomerID IS NULL AND SupplierID IS NOT NULL)
+    )
+);
+```
+
+This approach ensures that each order is linked to either a customer or a supplier, maintaining the integrity of your database design. Remember to adjust the data types and constraints as per your database's specific requirements. 😊
+
+## 從訂單找交易對象
+
+To record either a customer or supplier in the `交易對象` field of the `收付款明細` table, you can modify the `訂單` (Orders) table to include both a `CustomerID` and a `SupplierID`. Then, in the `收付款明細` (PaymentDetail) table, you can reference the `訂單` table and use a conditional check to determine whether the transaction party is a customer or supplier based on which field is populated. Here's how you can adjust your tables:
+
+With these changes, when you create a record in the `收付款明細` table, you will reference the `OrderNumber`. The `訂單` table will indicate whether the transaction is related to a customer or supplier by checking which ID field (`CustomerID` or `SupplierID`) is filled.
+
+Here's an example of how you might check this in a query:
+
+```sql
+SELECT
+    pd.BillNumber,
+    pd.OrderNumber,
+    CASE
+        WHEN o.CustomerID IS NOT NULL THEN 'Customer'
+        WHEN o.SupplierID IS NOT NULL THEN 'Supplier'
+    END AS TransactionPartyType,
+    COALESCE(o.CustomerID, o.SupplierID) AS TransactionPartyID,
+    pd.BankCode,
+    pd.TransactionDate,
+    pd.Amount
+FROM
+    PaymentDetail pd
+JOIN
+    Orders o ON pd.OrderNumber = o.OrderNumber
+```
+
+This SQL query uses a `CASE` statement to determine the type of the transaction party and the `COALESCE` function to get the non-null `CustomerID` or `SupplierID`. This way, you can record and identify whether the transaction party is a customer or supplier without altering the structure of the `收付款明細` table. Remember to adjust your application logic accordingly to handle these changes.
