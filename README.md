@@ -55,42 +55,57 @@
 
 ## 應用情境
 
-作為礦業開發公司所使用的會計系統,
-本系統資料庫涵蓋材料、存貨、訂單、物品之儲存,
+作為礦業開發公司所使用的會計系統，
+本系統資料庫涵蓋材料、存貨、訂單、物品之儲存，
 可延伸之應用為訂單、存貨、貿易、會計、管理系統等。
 
-礦業進行開發時，可記錄採集到之天然礦物，與員工生產之商品。
+礦業進行開發時，可記錄採集到之天然礦物與員工生產之商品。
 而礦業開發所運用到之各項器具、物品等，將儲存至資料庫中。
-會計系統將以存貨、銷售、與進貨產生的付款收款明細來結算交易。
+會計系統將以銷售、與進貨產生的訂單與付款收款明細來結算交易。
 
 ## 系統需求說明
 <!-- TODO: 修改需求說明，因交易類別已移除
 依據新編之完整性限制中，新增之實體與關聯，修改此段。
 -->
 本系統將存貨、材料、工具或裝置等以物品ID、物品類別、名稱、數量、
-數量單位、單價、用途、存放地點、購置日期與供應商等，儲存至物品資料表。
+數量單位、單價、用途、存放倉庫、購置日期與供應商，儲存至物品資料表。
 其中，存貨無需紀錄供應商、購置日期。
 
-員工資料表儲存員工ID、員工姓名、所屬部門與其職位，
+員工資料表儲存員工ID、員工姓名、所屬部門、職位與電子郵件，
 其中員工部門與職位應依據事實填寫。
 
-銀行資料表儲存合法的銀行代號與銀行名稱，用於確認錯誤的代碼。
+銀行資料表儲存了財金資訊股份有限公司接受的銀行機構，
+作為財政部出資之機構，此來源應足以驗證極大部分屬於中華民國境內銀行代碼。
 
-客戶資料表儲存客戶ID與其名稱。首次消費之顧客應新增至此。
-
-供應商資料表儲存供應商ID與其名稱，只儲存與本公司合作之企業。
+客戶與供應商資料表儲存了曾消費過的客戶與合作廠商，
+系統會為新客戶、供應商產生一組客戶ID與供應商ID，
+並儲存客戶與供應商名稱與電子郵件以利聯絡。
 
 物品類別資料表儲存各類別ID與其說明。
 
 倉庫資料表紀錄各倉庫ID與其地址，可依照需求填寫該倉庫備註。
 
-採購部門進貨時，供應訂單應紀錄負責員工ID、物品ID、物品數量、供應商、訂單編號、付款方式與付款日期。
-銷售部門賣出存貨時，應紀錄之項目如採購部門相同。
+<!-- TODO:增加訂單 -->
+客戶送出的訂單與向供應商的進貨單，將會由系統以下單日為基礎，
+產生一組訂單編號，並記錄付款日期、付款方式，
+並記錄客戶或供應商ID以區分客戶訂單與進貨單。
 
-生產部門儲存商品時,應紀錄負責員工ID、物品ID、銷貨成本與製造日期，此處物品單價意指商品售價。
+<!-- TODO:增加訂單明細 -->
+每筆訂單將由購買或銷售的物品，分別產生訂單明細，
+每筆明細單紀錄訂單編號以標示其所屬訂單，並且由系統產生明細編號。
+一筆明細只記錄一種物品、交易數量與該物品所對應的數量單位。
+訂單金額由物品數量與其單價計算乘積，不記錄於訂單上。
 
-會計系統將收付款明細結算交易時,應紀錄專責員工ID與帳單編號。
-收付款明細將紀錄帳單編號、訂單編號、交易日期、銀行代號、銀行帳號、銀行名稱、交易對象與金額。
+<!-- TODO:收付款明細 -->
+每筆訂單在收到、給付款項之後，由財務部紀錄收付款明細。
+每筆收付款明細由系統產生帳單編號、紀錄對應之訂單編號、
+交易對象、收付款帳號與其所屬之銀行代號、交易日期與金額。
+會計系統將收付款明細結算交易時，應紀錄專責員工ID與帳單編號。
+
+客戶與向供應商送出的訂單，應可依照需求修改與撤銷，
+每筆訂單皆由一位行銷部門或採購部門的專責員工負責。
+
+生產部門儲存商品時，應紀錄負責倉儲的員工ID、物品ID、銷貨成本與製造日期，此處物品單價意指商品售價。
 
 ## 使用案例
 
@@ -133,6 +148,25 @@
 
 行銷與銷售部門的經理有行銷經理，銷售經理。
 
+---
+
+<!-- Copilot 依照需求分析所產生的使用案例 -->
+您的系統需求分析看起來是合理且有效的。以下是根據您的需求分析所產生的一些用例：
+
+1. **用例1 - 建立新物品**：當有新的存貨、材料、工具或裝置進入時，系統會生成一個新的物品ID，並將相關資訊（如物品類別、名稱、數量、數量單位、單價、用途、存放倉庫、購置日期與供應商）儲存至物品資料表。
+
+2. **用例2 - 建立新訂單**：當客戶或供應商送出訂單時，系統會生成一個新的訂單編號，並記錄付款日期、付款方式，以及客戶或供應商ID。
+
+3. **用例3 - 建立訂單明細**：對於每筆訂單中購買或銷售的物品，系統會生成一個訂單明細，記錄訂單編號、物品、交易數量和該物品所對應的數量單位。
+
+4. **用例4 - 紀錄收付款明細**：每筆訂單在收到、給付款項之後，由財務部紀錄收付款明細。每筆收付款明細由系統產生帳單編號、紀錄對應之訂單編號、交易對象、收付款帳號與其所屬之銀行代號、交易日期與金額。
+
+5. **用例5 - 修改或撤銷訂單**：客戶或供應商可以根據需求修改或撤銷訂單。每筆訂單都由行銷部門或採購部門的專責員工負責。
+
+6. **用例6 - 儲存商品**：當生產部門儲存商品時，應紀錄負責倉儲的員工ID、物品ID、銷貨成本與製造日期。
+
+這些用例應該能夠涵蓋您的系統需求分析中提到的大部分功能。希望這對您有所幫助！😊
+
 ### 使用案例圖
 
 ![Use case diagram](./document/Usecase.png)
@@ -172,19 +206,20 @@
 ### 實體
 
 1. 員工
-    1. 員工ID:長度為11的大寫英數字串,不可為空,格式為 `DEP-POS-ID`
-        1. 三個部分以 `-` 符號分隔,字母皆為大寫。
-        2. `DEP` 代表部門,以1至3位大寫英文字母編碼。
-        3. `POS` 代表職位,以1至3位大寫英文字母編碼。
+    <!-- TODO: 員工增加EMAIL -->
+    1. 員工ID:長度為11的大寫英數字串，不可為空，格式為 `DEP-POS-ID`
+        1. 三個部分以 `-` 符號分隔，字母皆為大寫。
+        2. `DEP` 代表部門，以1至3位大寫英文字母編碼。
+        3. `POS` 代表職位，以1至3位大寫英文字母編碼。
         4. `ID` 為3位大寫英文字母與數字編碼。
         5. 縮寫舉例列於 [實體詳細說明](#實體詳細說明)
-    2. 部門:長度為10的中文字串,須符合公司內的部門名稱,不可為空。
-    3. 職位:長度為10的中文字串,須符合公司內的職位名稱,不可為空。
-    4. 姓名:長度為10的中文字串,須符合姓氏+名字順序,不可為空。
+    2. 部門:長度為10的中文字串，須符合公司內的部門名稱，不可為空。
+    3. 職位:長度為10的中文字串，須符合公司內的職位名稱，不可為空。
+    4. 姓名:長度為10的中文字串，須符合姓氏+名字順序，不可為空。
 
 2. 銀行
-    1. 銀行代碼:長度為的數字串,不可為空。
-        1. 格式為 `金融機構總代號` `分支機構代號`,皆可由`0`開頭。
+    1. 銀行代碼:長度為的數字串，不可為空。
+        1. 格式為 `金融機構總代號` `分支機構代號`，皆可由`0`開頭。
         2. `金融機構總代號` 為3碼數字
         3. `分支機構代號` 為4碼數字
         4. `金融機構總代號` 可單獨存在，`分支機構代號`必須接在其後。
@@ -193,32 +228,35 @@
     2. 銀行名稱:長度為30的中文字串，不可為空。
         1. 需為中華民國登記在案的銀行名稱。
         2. 參考來源: [財金資訊股份有限公司 總分支機構查詢](https://www.fisc.com.tw/TC/Service?CAID=51254999-5d15-4ddf-8e54-4b2cdb2a8399)
-
 3. 客戶
-    1. 客戶ID:長度為10的大寫英數字串, 格式為 `Client-ID`, 不可為空。
+    <!-- TODO: 客戶增加EMAIL -->
+    1. 客戶ID:長度為10的大寫英數字串， 格式為 `Client-ID`， 不可為空。
         1. `Client` 為6個字元之大寫字母 `CLIENT`
         2. 第七個字元為 `-`
-        3. `ID` 為長度三且隨機的大寫英數字串, `[A-Z0-9]{3}`
-    2. 客戶名稱:長度為30的中文字串, 不可為空
+        3. `ID` 為長度三且隨機的大寫英數字串， `[A-Z0-9]{3}`
+    2. 客戶名稱:長度為30的中文字串， 不可為空
+    3. 客戶電子郵件:長度為320的字串，格視為 `local-part@domain`，不可為空。
+       1. `local-part` 為小於64個字元之字串，
 
 4. 供應商
-    1. 供應商ID:長度為6的大寫英數字串, 格式為 `Supplier-ID`, 不可為空
+    <!-- TODO: 供應商增加EMAIL -->
+    1. 供應商ID:長度為6的大寫英數字串， 格式為 `Supplier-ID`， 不可為空
         1. `Supplier` 為三個大寫字母`SUP`
         2. 第四個字元為 `-`
-        3. `ID` 為長度二且隨機的大寫英數字串, `[A-Z0-9]{2}`
-    2. 供應商名稱:長度為50的中文字串, 不可為空
+        3. `ID` 為長度二且隨機的大寫英數字串， `[A-Z0-9]{2}`
+    2. 供應商名稱:長度為50的中文字串， 不可為空
         1. 需符合登記在經濟部公司法人名稱
 
 5. 物品類別
-    1. 物品類別ID:長度為7的大寫英數字串，格式為 `CAT-No`, 不可為空
+    1. 物品類別ID:長度為7的大寫英數字串，格式為 `CAT-No`， 不可為空
         1. 兩個部分 `CAT` 與 `itmeID` 之間以 `-` 字元分隔
         2. `CAT` 為固定的三個大寫字母：CAT
         3. `No` 為隨機三位整數，`000`至 `999`。
-    2. 類別說明, 不可為空
-        1. 長度為10的中文字串,如礦石類、工具類、材料類,預設值為未分類。
+    2. 類別說明， 不可為空
+        1. 長度為10的中文字串，如礦石類、工具類、材料類，預設值為未分類。
 
 6. 倉庫
-    1. 倉庫ID:長度為7的大寫英數字串，格式為 `WH-ID`,不可為空。
+    1. 倉庫ID:長度為7的大寫英數字串，格式為 `WH-ID`，不可為空。
         1. 前2個字元固定為 `WH`
         2. 第3個字元為 `-` 作為分隔符號
         3. `ID`為四個數字字元，`0000`至 `9999`
@@ -226,46 +264,48 @@
     3. 倉庫備註:不超過100字元字串，可為空。
 
 7. 物品
-    1. 物品ID:長度為15的大寫英數字串, 不可為空
+    <!-- TODO: 刪除購置日期 -->
+    1. 物品ID:長度為15的大寫英數字串， 不可為空
         1. `[A-Z]{5}[0-9]{10}`
         2. 無連接符號
         3. 前五碼為大寫英文AAAAA~ZZZZZ
         4. 後十碼為正整數0000000000~9999999999。
-    2. 物品類別ID:長度為7的字串，格式為 `CAT-No`, 參考 `物品類別實體之類別ID`
-    3. 物品名稱:長度為50的字串,不可為空。
-    4. 物品數量:正浮點數,不可為空,預設值為0.0。
+    2. 物品類別ID:長度為7的字串，格式為 `CAT-No`， 參考 `物品類別實體之類別ID`
+    3. 物品名稱:長度為50的字串，不可為空。
+    4. 物品數量:正浮點數，不可為空，預設值為0.0。
         1. 若物品類別無法以個數計數時，單位為公斤
         2. 物品數量單位不另外分類與紀錄
     5. 數量單位:四個字元的字串，只可為以下字串。不可為空。
         1. "公斤"、"公尺"、"立方公尺"、"平方公尺"、"個"、"單位"。
         2. 對應物品類別選擇適當的單位。
-    6. 物品單價:正整數,不可為空,預設值為0。
-    7. 用途:長度為50的字串,可為空,預設值為NULL。
-    8. 存放地點:長度為7的字串，參考`倉庫實體之倉庫ID`,不可為空。
-    9. 購置日期:只儲存年月日,不得小於公司建立日期,預設值為NULL。
-        1. 格式為 `yyyy-MM-dd`
-    10. 供應商:長度為6的字串, 參考`供應商實體之供應商ID`。
+    6. 物品單價:正整數，不可為空，預設值為0。
+    7. 用途:長度為50的字串，可為空，預設值為NULL。
+    8. 存放地點:長度為7的字串，參考`倉庫實體之倉庫ID`，不可為空。
+    9. ~~購置日期:只儲存年月日，不得小於公司建立日期，預設值為NULL。~~
+        1. ~~格式為 `yyyy-MM-dd`~~
+    10. 供應商:長度為6的字串， 參考`供應商實體之供應商ID`。
 
 8. 訂單
-    1. 訂單編號:長度為12的字串,格式為 `DATE-OrderId`。
-        1. `DATE` 為下單日期, 長度為8的數字字串, 格式為 `YYYYMMDD`, 紀錄年月日
+    <!-- TODO: 交易對象拆分為交易客戶與交易廠商的參考，只能存在一欄 -->
+    1. 訂單編號:長度為12的字串，格式為 `DATE-OrderId`。
+        1. `DATE` 為下單日期， 長度為8的數字字串， 格式為 `YYYYMMDD`， 紀錄年月日
         2. 第9碼為字元 `-`
-        3. `OrderId` 為3碼隨機, 包含大小寫的英文字母及數字
-    2. 付款日期:儲存日期時間,不得小於從公司建立日期, 可為空,預設值為NULL。
+        3. `OrderId` 為3碼隨機， 包含大小寫的英文字母及數字
+    2. 付款日期:儲存日期時間，不得小於從公司建立日期， 可為空，預設值為NULL。
         1. 格式為 `yyyy-MM-dd`
     3. 付款方式:長度為2的中文字串，只可為 "匯款"或"付現"，不可為空。
-    4. 交易對象:長度為10的字串, 參考 `客戶實體之客戶ID`, 不可為空。
+    4. 交易對象:長度為10的字串， 參考 `客戶實體之客戶ID`， 不可為空。
 
 9. 訂單明細
-    1. 明細ID:長度為15的字串,格式為 `DATE-OrderId-Detail`。
+    1. 明細ID:長度為15的字串，格式為 `DATE-OrderId-Detail`。
         1. 三個部分以 `-` 字元分隔
-        2. `DATE` 為下單日期, 長度為8的數字字串, 格式為 `YYYYMMDD`, 紀錄年月日
-        3. `OrderId` 為3碼隨機, 包含大小寫的英文字母及數字
+        2. `DATE` 為下單日期， 長度為8的數字字串， 格式為 `YYYYMMDD`， 紀錄年月日
+        3. `OrderId` 為3碼隨機， 包含大小寫的英文字母及數字
         4. `Detail` 為2碼正整數，範圍由 00至99
-    2. 訂單編號:長度為12的字串,格式為 `DATE-OrderId`。
-        1. `DATE` 為下單日期, 長度為8的數字字串, 格式為 `YYYYMMDD`, 紀錄年月日
+    2. 訂單編號:長度為12的字串，格式為 `DATE-OrderId`。
+        1. `DATE` 為下單日期， 長度為8的數字字串， 格式為 `YYYYMMDD`， 紀錄年月日
         2. 第9碼為字元 `-`
-        3. `OrderId` 為3碼隨機, 包含大小寫的英文字母及數字
+        3. `OrderId` 為3碼隨機， 包含大小寫的英文字母及數字
     3. 交易商品:長度為15的大寫英數字串，參考 `物品實體之物品ID`
     4. 交易數量:正浮點數，不可為空。
         1. 對應`物品類別`，若為可數之物品，小數點後應為零。
@@ -274,37 +314,37 @@
         2. 對應物品類別選擇適當的單位。
 
 10. 收付款明細
-    1. 帳單編號:長度為10的字母與數字,不可為空。格式如下。
+    1. 帳單編號:長度為10的字母與數字，不可為空。格式如下。
         1. `^[A-Za-z0-9]{3}-[0-9]{6}$`
         2. 前3碼為隨機的英文字母及數字
         3. 第4碼為字元"-"
         4. 後6碼為隨機的數字
-    2. 訂單編號:長度為12的字串,參考`訂單實體之訂單編號`,格式為 `DATE-OrderId`。
-        1. `DATE` 為下單日期, 長度為8的數字字串, 格式為 `YYYYMMDD`, 紀錄年月日
+    2. 訂單編號:長度為12的字串，參考`訂單實體之訂單編號`，格式為 `DATE-OrderId`。
+        1. `DATE` 為下單日期， 長度為8的數字字串， 格式為 `YYYYMMDD`， 紀錄年月日
         2. 第9碼為字元 `-`
-        3. `OrderId` 為3碼隨機, 包含大小寫的英文字母及數字
-    3. 交易對象:長度為10的字串, 參考 `客戶實體之客戶ID`, 不可為空
-    4. 銀行代號:長度為3的字串, 參考 `銀行實體之銀行代號`。
+        3. `OrderId` 為3碼隨機， 包含大小寫的英文字母及數字
+    3. 交易對象:長度為10的字串， 參考 `客戶實體之客戶ID`， 不可為空
+    4. 銀行代號:長度為3的字串， 參考 `銀行實體之銀行代號`。
         1. 若該筆訂單非轉匯款支付，不可為空。
-    5. 銀行帳號:長度為14的數字字串,7+7(局號+帳號)。
+    5. 銀行帳號:長度為14的數字字串，7+7(局號+帳號)。
         1. 若該筆訂單非轉匯款支付，不可為空。
-    6. 交易日期:只儲存年月日,不得小於從公司建立日期,預設值為NULL。
+    6. 交易日期:只儲存年月日，不得小於從公司建立日期，預設值為NULL。
         1. 格式為 `yyyy-MM-dd`
-    7. 金額:正整數,不可為空
+    7. 金額:正整數，不可為空
 
 ### 關聯
 
 1. 訂單處理關係
     <!-- 員工處裡訂單 -->
     1. 訂單編號:長度為12的字串，格式為 `DATE-OrderId`，參考`訂單實體之訂單編號`。
-        1. `DATE` 為下單日期, 長度為8的數字字串, 格式為 `YYYYMMDD`, 紀錄年月日
+        1. `DATE` 為下單日期， 長度為8的數字字串， 格式為 `YYYYMMDD`， 紀錄年月日
         2. 第9碼為字元 `-`
-        3. `OrderId` 為3碼隨機, 包含大小寫的英文字母及數字
-    2. 員工ID:長度為10的字串,不可為空,格式為`DEP-POS-ID`，參考`員工實體之員工ID`
+        3. `OrderId` 為3碼隨機， 包含大小寫的英文字母及數字
+    2. 員工ID:長度為10的字串，不可為空，格式為`DEP-POS-ID`，參考`員工實體之員工ID`
 
 2. 出貨關係
     <!-- 物品提供給訂單 -->
-    1. 物品ID:長度為15的大寫英數字串, 不可為空
+    1. 物品ID:長度為15的大寫英數字串， 不可為空
         1. `[A-Z]{5}[0-9]{10}`
         2. 前五碼為大寫英文AAAAA~ZZZZZ
         3. 後十碼為正整數0000000000~9999999999。
@@ -316,15 +356,15 @@
     2. 訂單編號:長度為12的字串，格式為 `DATE-OrderId`，參考`訂單實體之訂單編號`。
 
 4. 製造關係
-    1. 員工ID:長度為10的字串,不可為空,格式為`DEP-POS-ID`。
-    2. 物品ID:長度為15的字串,格式如前述。
+    1. 員工ID:長度為10的字串，不可為空，格式為`DEP-POS-ID`。
+    2. 物品ID:長度為15的字串，格式如前述。
     3. 製造數量:正浮點數，商品可能為不可數物品。
-    4. 製造日期:儲存日期時間,可為空,不得小於從公司建立日期,預設值為輸入資料當日。
+    4. 製造日期:儲存日期時間，可為空，不得小於從公司建立日期，預設值為輸入資料當日。
         1. 格式為 `yyyy-MM-dd`
-    5. 銷貨成本:正整數,包含零,預設值為NULL。
+    5. 銷貨成本:正整數，包含零，預設值為NULL。
 
 5. 紀錄關係
-    1. 員工ID:長度為10的字串,不可為空,格式為`DEP-POS-ID`。
+    1. 員工ID:長度為10的字串，不可為空，格式為`DEP-POS-ID`。
     2. 帳單編號:長度為10的字母與數字，參考`收付款明細實體之帳單編號`。
     3. 格式為 `^[A-Za-z0-9]{3}-\d{6}$`
 
@@ -336,7 +376,7 @@
 7. 包含關係
     <!-- 物品屬於對應類別 -->
     1. 物品ID:長度為15的字串，參考`物品實體之物品ID`。
-    2. 類別ID:長度為7的字串，格式為 `CAT-No`, 參考 `物品類別ID`
+    2. 類別ID:長度為7的字串，格式為 `CAT-No`， 參考 `物品類別ID`
 
 8. 存放關係
     <!-- 物品存放在指定的倉庫 -->
@@ -345,11 +385,11 @@
 
 9. 確認關係
     1. 帳單編號:長度為10的字母與數字，參考`收付款明細實體之帳單編號`。
-    2. 銀行代號:長度為3的字串, 參考 `銀行實體之銀行代號`。
+    2. 銀行代號:長度為3的字串， 參考 `銀行實體之銀行代號`。
 
 10. 產生關係
     1. 訂單編號:長度為12的字串，格式為 `DATE-OrderId`，參考`訂單實體之訂單編號`。
-    2. 明細ID:長度為15的字串,格式為 `DATE-OrderId-Detail`，參考`訂單明細實體之明細ID`。
+    2. 明細ID:長度為15的字串，格式為 `DATE-OrderId-Detail`，參考`訂單明細實體之明細ID`。
 
 ## 實體與關聯之屬性及詳細說明
 
@@ -370,11 +410,13 @@
 | 銀行 | 銀行代號 | Primary Key   |
 |      | 銀行名稱 | Alternate Key |
 
+<!-- TODO: 客戶增加EMAIL -->
 | 實體 | 屬性     | Key         |
 | ---- | -------- | ----------- |
 | 客戶 | 客戶ID   | Primary Key |
 |      | 客戶名稱 |             |
 
+<!-- TODO: 供應商增加EMAIL -->
 | 實體   | 屬性       | Key           |
 | ------ | ---------- | ------------- |
 | 供應商 | 供應商ID   | Primary Key   |
@@ -404,9 +446,11 @@
 |      | 購置日期   |               |
 |      | 供應商     | Foreign Key   |
 
+<!-- TODO: 交易對象拆分為交易客戶與交易廠商的參考，只能存在一欄 -->
 | 實體 | 屬性     | Key         |
 | ---- | -------- | ----------- |
 | 訂單 | 訂單編號 | Primary Key |
+|      | 下單日期 |             |
 |      | 付款日期 |             |
 |      | 付款方式 |             |
 |      | 交易對象 | Foreign Key |
@@ -579,7 +623,7 @@
 | 實體 | 屬性   | Key         | Domain                                | 說明                                                   |
 | ---- | ------ | ----------- | ------------------------------------- | ------------------------------------------------------ |
 | 員工 | 員工ID | Primary Key | 格式為 `DEP-POS-ID`                   | 員工的ID，`DEP` 代表部門、`POS` 代表職位、`ID`為編號。 |
-|      |        |             | `^[A-Z]{1,3}-[A-Z]{1,3}-[A-Z0-9]{3}$` | 部門、職位依據員工實際資料，編號由程式產生。           |
+|      |        |             | `^[A-Z]{1，3}-[A-Z]{1，3}-[A-Z0-9]{3}$` | 部門、職位依據員工實際資料，編號由程式產生。           |
 |      |        |             |                                       | `ID` 能為各部門的不同職位提供 46656 個員工ID。         |
 |      | 姓名   |             | 長度為10的中文字串                    | 員工的姓名。                                           |
 |      | 部門   |             | 長度為10的中文字串                    | 員工部門，該部門需存在於公司中。                       |
@@ -589,26 +633,26 @@
 
 部門縮寫範例
 
-1. `MSD`: Marketing and Sales Department, 行銷與銷售部門
-2. `FD`: Finance Department, 財務部門
-3. `POD`: Production/Operations Department, 生產/運營部門
-4. `RDD`: Research and Development Department, 研究與開發部門
-5. `CSD`: Customer Service Department, 客戶服務部門
-6. `PD`: Purchasing Department, 採購部門
-7. `ITD`: IT Department, 資訊科技部門
+1. `MSD`: Marketing and Sales Department， 行銷與銷售部門
+2. `FD`: Finance Department， 財務部門
+3. `POD`: Production/Operations Department， 生產/運營部門
+4. `RDD`: Research and Development Department， 研究與開發部門
+5. `CSD`: Customer Service Department， 客戶服務部門
+6. `PD`: Purchasing Department， 採購部門
+7. `ITD`: IT Department， 資訊科技部門
 
 職位縮寫範例
 
-1. `BL`: Blaster, 爆破工
-2. `UM`: Underground Miner, 地下礦工
-3. `HEO`: Heavy Equipment Operator, 重型設備操作員
-4. `DR`: Driller, 鑽孔員
-5. `EL`: Electrician, 電工
-6. `MP`: Material Planner, 物料規劃員
-7. `HSS`: Health and Safety Specialist, 健康與安全專員
-8. `MM`: Mine Manager, 礦場經理
-9. `CH`: Chemist, 化學家
-10. `GE`: Geological Engineer, 地質工程師
+1. `BL`: Blaster， 爆破工
+2. `UM`: Underground Miner， 地下礦工
+3. `HEO`: Heavy Equipment Operator， 重型設備操作員
+4. `DR`: Driller， 鑽孔員
+5. `EL`: Electrician， 電工
+6. `MP`: Material Planner， 物料規劃員
+7. `HSS`: Health and Safety Specialist， 健康與安全專員
+8. `MM`: Mine Manager， 礦場經理
+9. `CH`: Chemist， 化學家
+10. `GE`: Geological Engineer， 地質工程師
 
 | 實體 | 屬性     | Domain                                 | 說明                                                                                     |
 | ---- | -------- | -------------------------------------- | ---------------------------------------------------------------------------------------- |
@@ -664,7 +708,7 @@
 | 實體 | 屬性       | Domain                                   | 說明                                                  |
 | ---- | ---------- | ---------------------------------------- | ----------------------------------------------------- |
 | 物品 | 物品ID     | `[A-Z]{5}[0-9]{10}`                      | 物品的編號，由程式產生                                |
-|      |            |                                          | 此格式可記錄11,881,376,000,000,000種物品              |
+|      |            |                                          | 此格式可記錄11，881，376，000，000，000種物品              |
 |      | 物品類別ID | 長度為7的字串                            | 物品對應的類別所屬之類別ID                            |
 |      | 物品名稱   | 長度為50的字串                           | 物品類別，由類別判斷是否為商品，參考 `物品類別ID`     |
 |      | 物品數量   | 正浮點數                                 | 使用正浮點數可應對不同單位的計數，可數物品則小數只為0 |
@@ -673,10 +717,11 @@
 |      | 用途       | 長度為50的字串                           | 物品之說明欄位                                        |
 |      | 存放地點   | 長度為7的字串，參考`倉庫之倉庫ID`        | 物品存放地點                                          |
 |      | 購置日期   | 格式為 `yyyy-MM-dd`，不小公司建立日期    | 物品之購入日期                                        |
-|      | 供應商     | 長度為6的字串, 參考`供應商之供應商ID`    | 購入物品之供應商，物品為商品時，此欄位為空            |
+|      | 供應商     | 長度為6的字串， 參考`供應商之供應商ID`    | 購入物品之供應商，物品為商品時，此欄位為空            |
 
 物品ID範例: AAAAA0000000000
 
+<!-- TODO: 交易對象拆分為交易客戶與交易廠商的參考，只能存在一欄 -->
 | 實體 | 屬性     | Domain                                | 說明                                               |
 | ---- | -------- | ------------------------------------- | -------------------------------------------------- |
 | 訂單 | 訂單編號 | 格式為 `DATE-OrderId`                 | 每個訂單編號將由程式產生，由下單日為基礎產生       |
@@ -705,7 +750,7 @@
 |            | 銀行名稱 | 長度為30的中文字串                | 對應銀行代號之銀行名稱，參考`銀行實體之銀行名稱`                                        |
 |            | 交易對象 | 長度為30的中文字串                | 交易對象為客戶時，此為銷售，對象為供應商時，則為進貨。參考 `客戶與供應商銀行實體之主鍵` |
 |            | 銀行代號 | 長度為3的字串                     | 該銀行對應的三碼數字，由程式檢查其正確性，參考 `銀行實體之銀行代號`                     |
-|            | 銀行帳號 | 長度為14的數字字串,7+7(局號+帳號) | 銀行的帳號                                                                              |
+|            | 銀行帳號 | 長度為14的數字字串，7+7(局號+帳號) | 銀行的帳號                                                                              |
 |            | 交易日期 | 格式為 `yyyy-MM-dd`               | 只儲存年月日，不得小於從公司建立日期                                                    |
 |            | 金額     | 正整數                            | 該訂單的金額                                                                            |
 
@@ -729,15 +774,15 @@
 
     ```sql
     CREATE TABLE 物品 (
-    物品ID INT PRIMARY KEY,
-    物品名稱 VARCHAR(100),
+    物品ID INT PRIMARY KEY，
+    物品名稱 VARCHAR(100)，
     物品描述 TEXT
     );
 
    CREATE TABLE 訂單明細 (
-      訂單明細ID INT PRIMARY KEY,
-      物品ID INT,
-      數量 INT,
+      訂單明細ID INT PRIMARY KEY，
+      物品ID INT，
+      數量 INT，
       FOREIGN KEY (物品ID) REFERENCES 物品(物品ID)
     );
     ```
@@ -756,16 +801,16 @@
     > ```sql
     > -- 創建客戶表
     > CREATE TABLE Customers (
-    >     CustomerID INT PRIMARY KEY,
-    >     CustomerName VARCHAR(255),
+    >     CustomerID INT PRIMARY KEY，
+    >     CustomerName VARCHAR(255)，
     >     CustomerContact VARCHAR(255)
     > );
     >
     > -- 創建訂單表，包含指向客戶表的外鍵
     > CREATE TABLE Orders (
-    >     OrderID INT PRIMARY KEY,
-    >     OrderDate DATE,
-    >     CustomerID INT,
+    >     OrderID INT PRIMARY KEY，
+    >     OrderDate DATE，
+    >     CustomerID INT，
     >     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
     > );
     > ```
@@ -786,18 +831,18 @@
     > ```sql
     > -- 創建訂單表
     > CREATE TABLE Orders (
-    >     OrderID INT PRIMARY KEY,
-    >     OrderDate DATE,
+    >     OrderID INT PRIMARY KEY，
+    >     OrderDate DATE，
     >     CustomerID INT
     >     -- 其他訂單相關欄位
     > );
     >
     > -- 創建訂單明細表，包含指向訂單表的外鍵
     > CREATE TABLE OrderDetails (
-    >     OrderDetailID INT PRIMARY KEY,
-    >     OrderID INT,
-    >     ProductID INT,
-    >     Quantity INT,
+    >     OrderDetailID INT PRIMARY KEY，
+    >     OrderID INT，
+    >     ProductID INT，
+    >     Quantity INT，
     >     FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
     >     -- 其他訂單明細相關欄位
     > );
@@ -827,25 +872,25 @@
     > ```sql
     > -- 創建員工表
     > CREATE TABLE Employees (
-    >     EmployeeID INT PRIMARY KEY,
+    >     EmployeeID INT PRIMARY KEY，
     >     EmployeeName VARCHAR(255)
     >     -- 其他員工相關欄位
     > );
     >
     > -- 創建物品表
     > CREATE TABLE Items (
-    >     ItemID INT PRIMARY KEY,
-    >     ItemName VARCHAR(255),
-    >     ItemPrice DECIMAL(10, 2)
+    >     ItemID INT PRIMARY KEY，
+    >     ItemName VARCHAR(255)，
+    >     ItemPrice DECIMAL(10， 2)
     >     -- 其他物品相關欄位
     > );
     >
     > -- 創建關聯表來表示員工和物品之間的多對多關係
     > CREATE TABLE EmployeeItems (
-    >     EmployeeID INT,
-    >     ItemID INT,
-    >     PRIMARY KEY (EmployeeID, ItemID),
-    >     FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID),
+    >     EmployeeID INT，
+    >     ItemID INT，
+    >     PRIMARY KEY (EmployeeID， ItemID)，
+    >     FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)，
     >     FOREIGN KEY (ItemID) REFERENCES Items(ItemID)
     >     -- 可以添加其他描述製造關係的欄位，如製造日期等
     > );
@@ -869,17 +914,17 @@
     > ```sql
     > -- 創建員工表
     > CREATE TABLE Employees (
-    >     EmployeeID INT PRIMARY KEY,
+    >     EmployeeID INT PRIMARY KEY，
     >     EmployeeName VARCHAR(255)
     >     -- 其他員工相關欄位
     > );
     >
     > -- 創建收付款明細表，包含指向員工表的外鍵
     > CREATE TABLE PaymentDetails (
-    >     PaymentDetailID INT PRIMARY KEY,
-    >     EmployeeID INT,
-    >     PaymentAmount DECIMAL(10, 2),
-    >     PaymentDate DATE,
+    >     PaymentDetailID INT PRIMARY KEY，
+    >     EmployeeID INT，
+    >     PaymentAmount DECIMAL(10， 2)，
+    >     PaymentDate DATE，
     >     FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
     >     -- 其他收付款明細相關欄位
     > );
@@ -903,16 +948,16 @@
     > ```sql
     > -- 創建供應商表
     > CREATE TABLE Suppliers (
-    >     SupplierID INT PRIMARY KEY,
+    >     SupplierID INT PRIMARY KEY，
     >     SupplierName VARCHAR(255)
     >     -- 其他供應商相關欄位
     > );
     >
     > -- 創建訂單表，包含指向供應商表的外鍵
     > CREATE TABLE Orders (
-    >     OrderID INT PRIMARY KEY,
-    >     OrderDate DATE,
-    >     SupplierID INT,
+    >     OrderID INT PRIMARY KEY，
+    >     OrderDate DATE，
+    >     SupplierID INT，
     >     FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID)
     >     -- 其他訂單相關欄位
     > );
@@ -941,16 +986,16 @@
     > ```sql
     > -- 創建物品類別表
     > CREATE TABLE ItemCategories (
-    >     CategoryID INT PRIMARY KEY,
+    >     CategoryID INT PRIMARY KEY，
     >     CategoryName VARCHAR(255)
     >     -- 其他物品類別相關欄位
     > );
     >
     > -- 創建物品表，包含指向物品類別表的外鍵
     > CREATE TABLE Items (
-    >     ItemID INT PRIMARY KEY,
-    >     ItemName VARCHAR(255),
-    >     CategoryID INT,
+    >     ItemID INT PRIMARY KEY，
+    >     ItemName VARCHAR(255)，
+    >     CategoryID INT，
     >     FOREIGN KEY (CategoryID) REFERENCES ItemCategories(CategoryID)
     >     -- 其他物品相關欄位
     > );
@@ -979,16 +1024,16 @@
     > ```sql
     > -- 創建倉庫表
     > CREATE TABLE Warehouses (
-    >     WarehouseID INT PRIMARY KEY,
+    >     WarehouseID INT PRIMARY KEY，
     >     WarehouseName VARCHAR(255)
     >     -- 其他倉庫相關欄位
     > );
     >
     > -- 創建物品表，包含指向倉庫表的外鍵
     > CREATE TABLE Items (
-    >     ItemID INT PRIMARY KEY,
-    >     ItemName VARCHAR(255),
-    >     WarehouseID INT,
+    >     ItemID INT PRIMARY KEY，
+    >     ItemName VARCHAR(255)，
+    >     WarehouseID INT，
     >     FOREIGN KEY (WarehouseID) REFERENCES Warehouses(WarehouseID)
     >     -- 其他物品相關欄位
     > );
@@ -1017,17 +1062,17 @@
     > ```sql
     > -- 創建銀行表
     > CREATE TABLE Banks (
-    >     BankID INT PRIMARY KEY,
+    >     BankID INT PRIMARY KEY，
     >     BankName VARCHAR(255)
     >     -- 其他銀行相關欄位
     > );
     >
     > -- 創建收付款明細表，包含指向銀行表的外鍵
     > CREATE TABLE PaymentDetails (
-    >     PaymentDetailID INT PRIMARY KEY,
-    >     BankID INT,
-    >     PaymentAmount DECIMAL(10, 2),
-    >     PaymentDate DATE,
+    >     PaymentDetailID INT PRIMARY KEY，
+    >     BankID INT，
+    >     PaymentAmount DECIMAL(10， 2)，
+    >     PaymentDate DATE，
     >     FOREIGN KEY (BankID) REFERENCES Banks(BankID)
     >     -- 其他收付款明細相關欄位
     > );
@@ -1049,9 +1094,9 @@
 
     ```sql
     Employee (
-        EmployeeID: string,
-        Department: string,
-        Position: string,
+        EmployeeID: string，
+        Department: string，
+        Position: string，
         EmployeeName: string
     )
     Primary Key: EmployeeID
@@ -1061,7 +1106,7 @@
 
     ```sql
     Bank (
-        BankCode: string,
+        BankCode: string，
         BankName: string
     )
     Primary Key: BankCode
@@ -1071,7 +1116,7 @@
 
     ```sql
     Customer (
-        CustomerID: string,
+        CustomerID: string，
         CustomerName: string
     )
     Primary Key: CustomerID
@@ -1081,7 +1126,7 @@
 
     ```sql
     Supplier (
-        SupplierID: string,
+        SupplierID: string，
         SupplierName: string
     )
     Primary Key: SupplierID
@@ -1091,7 +1136,7 @@
 
     ```sql
     ItemCategory (
-        ItemCategoryID: string,
+        ItemCategoryID: string，
         CategoryDescription: string
     )
     Primary Key: ItemCategoryID
@@ -1101,8 +1146,8 @@
 
     ```sql
     Warehouse (
-        WarehouseID: string,
-        WarehouseAddress: string,
+        WarehouseID: string，
+        WarehouseAddress: string，
         WarehouseNote: string
     )
     Primary Key: WarehouseID
@@ -1112,15 +1157,15 @@
 
     ```sql
     Item (
-        ItemID: string,
-        ItemCategoryID: string,
-        ItemName: string,
-        ItemQuantity: float,
-        QuantityUnit: string,
-        ItemPrice: integer,
-        Usage: string,
-        StorageLocation: string,
-        PurchaseDate: date,
+        ItemID: string，
+        ItemCategoryID: string，
+        ItemName: string，
+        ItemQuantity: float，
+        QuantityUnit: string，
+        ItemPrice: integer，
+        Usage: string，
+        StorageLocation: string，
+        PurchaseDate: date，
         Supplier: string
     )
     Primary Key: ItemID
@@ -1133,9 +1178,9 @@
 
     ```sql
     Orders (
-        OrderNumber: string,
-        PaymentDate: date,
-        PaymentMethod: string,
+        OrderNumber: string，
+        PaymentDate: date，
+        PaymentMethod: string，
         TransactionParty: string
     )
     Primary Key: OrderNumber
@@ -1146,10 +1191,10 @@
 
     ```sql
     OrderDetail (
-        DetailID: string,
-        OrderNumber: string,
-        TransactionItem: string,
-        TransactionQuantity: float,
+        DetailID: string，
+        OrderNumber: string，
+        TransactionItem: string，
+        TransactionQuantity: float，
         QuantityUnit: string
     )
     Primary Key: DetailID
@@ -1161,12 +1206,12 @@
 
     ```sql
     PaymentDetail (
-        BillNumber: string,
-        OrderNumber: string,
-        TransactionParty: string,
-        BankCode: string,
-        BankAccount: string,
-        TransactionDate: date,
+        BillNumber: string，
+        OrderNumber: string，
+        TransactionParty: string，
+        BankCode: string，
+        BankAccount: string，
+        TransactionDate: date，
         Amount: integer
     )
     Primary Key: BillNumber
@@ -1179,13 +1224,13 @@
 
     ```sql
     Manufacturing (
-        EmployeeID: string,
-        ItemID: string,
-        ManufacturingQuantity: float,
-        SalesCost: integer,
+        EmployeeID: string，
+        ItemID: string，
+        ManufacturingQuantity: float，
+        SalesCost: integer，
         ManufacturingDate: date
     )
-    Primary Key: (EmployeeID, ItemID)
+    Primary Key: (EmployeeID， ItemID)
     Foreign Key: EmployeeID References Employee
     Foreign Key: ItemID References Item
     ```
@@ -1196,13 +1241,13 @@
 -- 建立員工資料表
 CREATE TABLE
     IF NOT EXISTS Employee (
-        EmployeeID VARCHAR(11) NOT NULL,
-        Department VARCHAR(10) NOT NULL,
-        Position VARCHAR(10) NOT NULL,
-        EmployeeName VARCHAR(10) NOT NULL,
-        PRIMARY KEY (EmployeeID),
+        EmployeeID VARCHAR(11) NOT NULL，
+        Department VARCHAR(10) NOT NULL，
+        Position VARCHAR(10) NOT NULL，
+        EmployeeName VARCHAR(10) NOT NULL，
+        PRIMARY KEY (EmployeeID)，
         CONSTRAINT check_employee CHECK (
-            EmployeeID REGEXP '[A-Z]{1,3}-[A-Z]{1,3}-[A-Z0-9]{3}'
+            EmployeeID REGEXP '[A-Z]{1，3}-[A-Z]{1，3}-[A-Z0-9]{3}'
             AND LENGTH (EmployeeID) != 0
             AND LENGTH (Department) != 0
             AND LENGTH (Position) != 0
@@ -1215,9 +1260,9 @@ CREATE TABLE
 -- 建立銀行資料表
 CREATE TABLE
     IF NOT EXISTS Bank (
-        BankCode VARCHAR(7) NOT NULL,
-        BankName VARCHAR(30) NOT NULL,
-        PRIMARY KEY (BankCode),
+        BankCode VARCHAR(7) NOT NULL，
+        BankName VARCHAR(30) NOT NULL，
+        PRIMARY KEY (BankCode)，
         CONSTRAINT check_bank CHECK (
             BankCode REGEXP '[0-9]{3}'
             OR BankCode REGEXP '[0-9]{7}'
@@ -1229,9 +1274,9 @@ CREATE TABLE
 -- 建立客戶資料表
 CREATE TABLE
     IF NOT EXISTS Customer (
-        CustomerID VARCHAR(10) NOT NULL,
-        CustomerName VARCHAR(30) NOT NULL,
-        PRIMARY KEY (CustomerID),
+        CustomerID VARCHAR(10) NOT NULL，
+        CustomerName VARCHAR(30) NOT NULL，
+        PRIMARY KEY (CustomerID)，
         CONSTRAINT check_customer CHECK (CustomerID REGEXP 'CLIENT-[A-Z0-9]{3}')
     );
 ```
@@ -1240,9 +1285,9 @@ CREATE TABLE
 -- 建立供應商資料表
 CREATE TABLE
     IF NOT EXISTS Supplier (
-        SupplierID VARCHAR(6) NOT NULL,
-        SupplierName VARCHAR(50) NOT NULL,
-        PRIMARY KEY (SupplierID),
+        SupplierID VARCHAR(6) NOT NULL，
+        SupplierName VARCHAR(50) NOT NULL，
+        PRIMARY KEY (SupplierID)，
         CONSTRAINT check_supplier CHECK (SupplierID REGEXP 'SUP-[A-Z0-9]{2}')
     );
 ```
@@ -1251,9 +1296,9 @@ CREATE TABLE
 -- 建立物品類別資料表
 CREATE TABLE
     IF NOT EXISTS ItemCategory (
-        ItemCategoryID VARCHAR(7) NOT NULL,
-        CategoryDescription VARCHAR(10) NOT NULL DEFAULT '未分類',
-        PRIMARY KEY (ItemCategoryID),
+        ItemCategoryID VARCHAR(7) NOT NULL，
+        CategoryDescription VARCHAR(10) NOT NULL DEFAULT '未分類'，
+        PRIMARY KEY (ItemCategoryID)，
         CONSTRAINT check_category CHECK (ItemCategoryID REGEXP 'CAT-[0-9]{3}')
     );
 ```
@@ -1262,10 +1307,10 @@ CREATE TABLE
 -- 建立倉庫資料表
 CREATE TABLE
     IF NOT EXISTS Warehouse (
-        WarehouseID VARCHAR(7) NOT NULL,
-        WarehouseAddress VARCHAR(70) NOT NULL,
-        WarehouseNote VARCHAR(100),
-        PRIMARY KEY (WarehouseID),
+        WarehouseID VARCHAR(7) NOT NULL，
+        WarehouseAddress VARCHAR(70) NOT NULL，
+        WarehouseNote VARCHAR(100)，
+        PRIMARY KEY (WarehouseID)，
         CONSTRAINT check_warehouse CHECK (WarehouseID REGEXP 'WH-[0-9]{4}')
     );
 ```
@@ -1274,20 +1319,20 @@ CREATE TABLE
 -- 建立物品資料表
 CREATE TABLE
     IF NOT EXISTS Item (
-        ItemID VARCHAR(15) NOT NULL,
-        ItemCategoryID VARCHAR(7) NOT NULL,
-        ItemName VARCHAR(50) NOT NULL,
-        ItemQuantity FLOAT NOT NULL DEFAULT 0.0,
-        QuantityUnit VARCHAR(4) NOT NULL,
-        ItemPrice INT NOT NULL DEFAULT 0,
-        `Usage` VARCHAR(50) DEFAULT NULL,
-        StorageLocation VARCHAR(7) NOT NULL,
-        PurchaseDate DATE DEFAULT NULL,
-        Supplier VARCHAR(6) NOT NULL,
-        PRIMARY KEY (ItemID),
-        FOREIGN KEY (ItemCategoryID) REFERENCES ItemCategory (ItemCategoryID),
-        FOREIGN KEY (StorageLocation) REFERENCES Warehouse (WarehouseID),
-        FOREIGN KEY (Supplier) REFERENCES Supplier (SupplierID),
+        ItemID VARCHAR(15) NOT NULL，
+        ItemCategoryID VARCHAR(7) NOT NULL，
+        ItemName VARCHAR(50) NOT NULL，
+        ItemQuantity FLOAT NOT NULL DEFAULT 0.0，
+        QuantityUnit VARCHAR(4) NOT NULL，
+        ItemPrice INT NOT NULL DEFAULT 0，
+        `Usage` VARCHAR(50) DEFAULT NULL，
+        StorageLocation VARCHAR(7) NOT NULL，
+        PurchaseDate DATE DEFAULT NULL，
+        Supplier VARCHAR(6) NOT NULL，
+        PRIMARY KEY (ItemID)，
+        FOREIGN KEY (ItemCategoryID) REFERENCES ItemCategory (ItemCategoryID)，
+        FOREIGN KEY (StorageLocation) REFERENCES Warehouse (WarehouseID)，
+        FOREIGN KEY (Supplier) REFERENCES Supplier (SupplierID)，
         CONSTRAINT check_item CHECK (ItemID REGEXP '[A-Z]{5}[0-9]{10}')
     );
 ```
@@ -1296,12 +1341,12 @@ CREATE TABLE
 -- 建立訂單資料表
 CREATE TABLE
     IF NOT EXISTS Orders (
-        OrderNumber VARCHAR(12) NOT NULL,
-        PaymentDate DATE DEFAULT NULL,
-        PaymentMethod VARCHAR(2) NOT NULL,
-        TransactionParty VARCHAR(10) NOT NULL,
-        PRIMARY KEY (OrderNumber),
-        FOREIGN KEY (TransactionParty) REFERENCES Customer (CustomerID),
+        OrderNumber VARCHAR(12) NOT NULL，
+        PaymentDate DATE DEFAULT NULL，
+        PaymentMethod VARCHAR(2) NOT NULL，
+        TransactionParty VARCHAR(10) NOT NULL，
+        PRIMARY KEY (OrderNumber)，
+        FOREIGN KEY (TransactionParty) REFERENCES Customer (CustomerID)，
         CONSTRAINT check_order CHECK (OrderNumber REGEXP '[0-9]{8}-[A-Za-z0-9]{3}')
     );
 ```
@@ -1310,14 +1355,14 @@ CREATE TABLE
 -- 建立訂單明細資料表
 CREATE TABLE
     IF NOT EXISTS OrderDetail (
-        DetailID VARCHAR(15) NOT NULL,
-        OrderNumber VARCHAR(12) NOT NULL,
-        TransactionItem VARCHAR(15) NOT NULL,
-        TransactionQuantity FLOAT NOT NULL,
-        QuantityUnit VARCHAR(4) NOT NULL,
-        PRIMARY KEY (DetailID),
-        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber),
-        FOREIGN KEY (TransactionItem) REFERENCES Item (ItemID),
+        DetailID VARCHAR(15) NOT NULL，
+        OrderNumber VARCHAR(12) NOT NULL，
+        TransactionItem VARCHAR(15) NOT NULL，
+        TransactionQuantity FLOAT NOT NULL，
+        QuantityUnit VARCHAR(4) NOT NULL，
+        PRIMARY KEY (DetailID)，
+        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber)，
+        FOREIGN KEY (TransactionItem) REFERENCES Item (ItemID)，
         CONSTRAINT check_orderdetail CHECK (
             DetailID REGEXP '[0-9]{8}-[A-Za-z0-9]{3}-[0-9]{2}'
         )
@@ -1328,17 +1373,17 @@ CREATE TABLE
 -- 建立收付款明細資料表
 CREATE TABLE
     IF NOT EXISTS PaymentDetail (
-        BillNumber VARCHAR(10) NOT NULL,
-        OrderNumber VARCHAR(12) NOT NULL,
-        TransactionParty VARCHAR(10) NOT NULL,
-        BankCode VARCHAR(3),
-        BankAccount VARCHAR(14),
-        TransactionDate DATE DEFAULT NULL,
-        Amount INT NOT NULL,
-        PRIMARY KEY (BillNumber),
-        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber),
-        FOREIGN KEY (TransactionParty) REFERENCES Customer (CustomerID),
-        FOREIGN KEY (BankCode) REFERENCES Bank (BankCode),
+        BillNumber VARCHAR(10) NOT NULL，
+        OrderNumber VARCHAR(12) NOT NULL，
+        TransactionParty VARCHAR(10) NOT NULL，
+        BankCode VARCHAR(3)，
+        BankAccount VARCHAR(14)，
+        TransactionDate DATE DEFAULT NULL，
+        Amount INT NOT NULL，
+        PRIMARY KEY (BillNumber)，
+        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber)，
+        FOREIGN KEY (TransactionParty) REFERENCES Customer (CustomerID)，
+        FOREIGN KEY (BankCode) REFERENCES Bank (BankCode)，
         CONSTRAINT check_paymentdetail CHECK (BillNumber REGEXP '[A-Za-z0-9]{3}-[0-9]{6}')
     );
 ```
@@ -1347,13 +1392,13 @@ CREATE TABLE
 -- 建立製造關聯資料表
 CREATE TABLE
     IF NOT EXISTS Manufacturing (
-        EmployeeID VARCHAR(11) NOT NULL,
-        ItemID VARCHAR(15) NOT NULL,
-        ManufacturingQuantity FLOAT NOT NULL,
-        SalesCost INT DEFAULT NULL,
-        ManufacturingDate DATE DEFAULT NULL,
-        PRIMARY KEY (EmployeeID, ItemID),
-        FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID),
+        EmployeeID VARCHAR(11) NOT NULL，
+        ItemID VARCHAR(15) NOT NULL，
+        ManufacturingQuantity FLOAT NOT NULL，
+        SalesCost INT DEFAULT NULL，
+        ManufacturingDate DATE DEFAULT NULL，
+        PRIMARY KEY (EmployeeID， ItemID)，
+        FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID)，
         FOREIGN KEY (ItemID) REFERENCES Item (ItemID)
     );
 ```
