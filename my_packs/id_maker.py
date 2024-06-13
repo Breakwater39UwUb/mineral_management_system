@@ -9,10 +9,12 @@
 8. make_order_details_id()
 9. make_bill_id()
 10. test_all_functions()
+11. random_emp_id()
 """
 import random
 import string
 from datetime import datetime
+from my_packs.business import DEPS, DEP_NAME
 
 def make_employee_id(department: str,
                      position: str,
@@ -62,6 +64,30 @@ def make_employee_id(department: str,
     employee_id = f'{department}-{position}-{str(employee_id)}'
 
     return employee_id
+
+def make_employee_email(emp_id: str,
+                        third_level: str='',
+                        second_leve: str='company',
+                        top_level: str='com'):
+    email = emp_id + '@'
+    if third_level != '':
+        email += f'{third_level}.'
+    if second_leve != '':
+        email += f'{second_leve}.'
+    if top_level != '':
+        email += f'{top_level}'
+
+    return email
+
+def make_employee_data(emp_name: str,
+                       emp_dep: str,
+                       emp_pos: str,
+                       emp_id: str=None):
+    if emp_id is None:
+        emp_id = make_employee_id(emp_dep, emp_pos)
+    emp_email = make_employee_email(emp_id)
+
+    return emp_id, emp_name, emp_dep, emp_pos, emp_email
 
 def make_client_id(prefix: str = 'CLIENT',
                    id_length: int = 3):
@@ -382,3 +408,15 @@ def test_all_functions():
     for i in range(0, 5):
         print(make_bill_id())
     print()
+
+def test_random_dep_pos(is_print: bool=False):
+
+    dep, P = random.choice(list(DEPS.items()))
+    pos = random.choice(list(P.keys()))
+    dep_name = DEP_NAME[dep]
+    pos_name = P[pos]
+
+    if is_print:
+        print(dep, pos)
+        print(dep_name, '/', pos_name)
+    return dep, pos
