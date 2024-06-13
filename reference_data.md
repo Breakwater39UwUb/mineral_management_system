@@ -11,61 +11,148 @@
 
 1. **Marketing and Sales Department (MSD)**: This department is responsible for promoting the company's products or services, generating leads, and converting these leads into customers¹³.
     - Positions:
-      - Marketing Manager (MM)
-      - Sales Manager (SM)
-      - Business Development Executive (BDE)
+      1. Marketing Director (行銷總監) - MD
+      2. Marketing Manager (行銷經理) - MMG
+      3. Marketing Coordinator (行銷協調員) - MCO
+      4. Marketing Analyst (行銷分析師) - MAN
+      5. Marketing Specialist (行銷專員) - MS
+      6. Sales Director (銷售總監) - SD
+      7. Sales Manager (銷售經理) - SMG
+      8. Sales Representative (銷售代表) - SRE
+      9. Sales Specialist (銷售專員) - SS
+      10. Sales Consultant (銷售顧問) - SC
 
 2. **Finance Department (FD)**: This department manages the company's finances, including budgeting, financial reporting, and financial planning¹³.
     - Positions:
-      - Finance Manager (FM)
-      - Financial Analyst (FA)
-      - Accountant (AC)
+      1. Finance Manager (財務經理) - FMG
+      2. Financial Analyst (財務分析師) - FAN
+      3. Financial Controller (財務控制員) - FCO
+      4. Finance Clerk (財務文員) - FCL
+      5. Financial Advisor (財務顧問) - FAD
+      6. Finance Manager (財務經理) - FM
+      7. Accountant (會計師) - ACC
+      8. Financial Analyst (財務分析師) - FA
+      9. Auditor (審計員) - AUD
+      10. Controller (控制員) - CON
+      11. Treasurer (財務主管) - TRE
+      12. Budget Analyst (預算分析師) - BA
+      13. Tax Specialist (稅務專員) - TS
+      14. Payroll Clerk (工資管理員) - PC
 
 3. **Production/Operations Department (POD)**: This department manages the day-to-day activities required to produce and distribute the company's products or services¹.
     - Positions:
-      - Operations Manager (OM)
-      - Production Manager (PM)
-      - Logistics Coordinator (LC)
+      1. Operations Manager (運營經理) - OMG
+      2. Production Manager (生產經理) - PMG
+      3. Operations Analyst (運營分析師) - OAN
+      4. Production Planner (生產規劃員) - PPL
+      5. Operations Manager (運營經理) - OM
+      6. Production Supervisor (生產主管) - PS
+      7. Warehouse Specialist (倉管人員) - WHS
+      8. Inventory Manager (庫存經理) - IM
+      9. Plant Manager (工廠經理) - PM
+      10. Production Worker (生產工人) - PW
+      11. Quality Control Specialist (品質控制專員) - QCS
+      12. Production Planner (生產計劃員) - PP
+      13. Logistics Coordinator (物流協調員) - LC
+      14. Operations Analyst (運營分析師) - OA
+      15. Quality Assurance Manager (品質保證經理) - QAM
 
 4. **Research and Development Department (RDD)**: This department is responsible for developing new and existing products or services. They conduct research and development to create innovative offerings that meet customer needs¹³.
     - Positions:
-      - Research Scientist (RS)
-      - Product Development Manager (PDM)
-      - R&D Engineer (RDE)
+      1. Research Scientist (研究科學家) - RSC
+      2. Development Engineer (開發工程師) - DEN
+      3. Research Analyst (研究分析師) - RAN
+      4. Development Manager (開發經理) - DMG
+      5. Research Coordinator (研究協調員) - RCO
+      6. Research Scientist (研究科學家) - RS
+      7. Development Engineer (開發工程師) - DE
+      8. Lab Technician (實驗室技術員) - LT
+      9. Product Manager (產品經理) - PM
+      10. Research Associate (研究助理) - RA
+      11. Data Analyst (數據分析師) - DA
+      12. Project Manager (項目經理) - PJM
+      13. Test Engineer (測試工程師) - TE
+      14. Research Director (研究總監) - RD
+      15. Development Manager (開發經理) - DM
 
 5. **Customer Service Department (CSD)**: This department handles customer inquiries, complaints, and provides after-sales support³.
     - Positions:
-      - Customer Service Representative (CSR)
-      - Customer Service Manager (CSM)
-      - Support Specialist (SS)
+      1. Customer Service Manager (客戶服務經理) - CSM
+      2. Customer Service Representative (客戶服務代表) - CSR
+      3. Customer Support Specialist (客戶支援專員) - CSS
+      4. Customer Experience Manager (客戶體驗經理) - CEM
+      5. Customer Service Representative (客服代表) - CSR
+      6. Help Desk Specialist (幫助台專員) - HDS
+      7. Customer Service Manager (客服經理) - CSM
+      8. Call Center Agent (服務中心代理) - CCA
+      9. Technical Support Specialist (技術支援專員) - TSS
+      10. Account Manager (客戶經理) - AM
+      11. Client Relations Manager (客戶關係經理) - CRM
+      12. Service Desk Analyst (服務台分析師) - SDA
+      13. Customer Support Engineer (客戶支援工程師) - CSE
+      14. Customer Experience Manager (客戶體驗經理) - CEM
 
 6. **Purchasing Department (PD)**: This department is responsible for procuring goods and services for the organization¹.
     - Positions:
-      - Purchasing Manager (PM)
-      - Procurement Specialist (PS)
-      - Buyer (BY)
+      1. Purchasing Manager (採購經理) - PMG
+      2. Purchasing Agent (採購代理人) - PAG
+      3. Procurement Specialist (採購專員) - PCS
+      4. Purchasing Clerk (採購文員) - PCL
+      5. Procurement Analyst (採購分析師) - PAN
+      6. Purchasing Manager (採購經理) - PM
+      7. Buyer (採購員) - BUY
+      8. Procurement Specialist (採購專員) - PS
+      9. Purchasing Clerk (採購文員) - PC
+      10. Supply Chain Analyst (供應鏈分析師) - SCA
+      11. Vendor Manager (供應商經理) - VM
+      12. Procurement Manager (採購經理) - PRM
+      13. Purchasing Coordinator (採購協調員) - PCO
+      14. Inventory Control Specialist (庫存控制專員) - ICS
+      15. Purchasing Agent (採購代理) - PA
 
 7. **IT Department (ITD)**: This department is responsible for managing the company's information technology infrastructure⁴.
     - Positions:
-      - IT Manager (ITM)
-      - Network Administrator (NA)
-      - Software Developer (SD)
+      1. IT Manager (IT經理) - ITM
+      2. IT Technician (IT技術員) - ITT
+      3. Network Engineer (網絡工程師) - NEN
+      4. Software Developer (軟件開發人員) - SDE
+      5. IT Support Specialist (IT支援專員) - ISS
+      6. IT Manager (IT經理) - ITM
+      7. Systems Administrator (系統管理員) - SA
+      8. Network Engineer (網絡工程師) - NE
+      9. Database Administrator (數據庫管理員) - DBA
+      10. IT Support Specialist (IT支援專員) - ISS
+      11. Software Developer (軟件開發員) - SD
+      12. IT Analyst (IT分析師) - ITA
+      13. IT Project Manager (IT項目經理) - IPM
+      14. Security Analyst (安全分析師) - SEC
+      15. Web Developer (網頁開發員) - WD
 
----
+8. **Human Resource Department (HR)**: 人力資源部門
+    - Positions:
+      1. Human Resources Specialist (人力資源專員) - HRS
+      2. Human Resources Manager (人力資源經理) - HRM
+      3. Recruitment Specialist (招聘專員) - RS
+      4. Training Coordinator (培訓協調員) - TC
+      5. Benefits Administrator (福利管理員) - BA
+      6. HR Analyst (人力資源分析師) - HRA
+      7. Employee Relations Manager (員工關係經理) - ERM
+      8. HR Consultant (人力資源顧問) - HRC
+      9. Payroll Specialist (薪資專員) - PS
+      10. HR Assistant (人力資源助理) - HRA
 
-Sure, here are some positions that you might find in a mining and mineral company:
-
-1. **Blaster (BL)**: A mining blaster handles the care, transportation, and use of explosive material during mining operations¹.
-2. **Underground Miner (UM)**: An underground miner performs duties such as drilling, blasting, mu
-3. cking, bolting, and installing utilities within the mine¹.
-4. **Heavy Equipment Operator (HEO)**: A heavy equipment operator maintains, stores, and operates heavy equipment such as conveyors, bulldozers, excavators, and cranes¹.
-5. **Driller (DR)**: A driller is responsible for drilling holes for blasting in the mining operations³.
-6. **Electrician (EL)**: An electrician is responsible for the electrical systems in the mine³.
-7. **Material Planner (MP)**: A material planner is responsible for planning and coordinating material use in the mining operations³.
-8. **Health and Safety Specialist (HSS)**: A health and safety specialist ensures the safety of the workers and compliance with health and safety regulations³.
-9. **Mine Manager (MM)**: A mine manager oversees the mining operations and ensures they are carried out efficiently and safely³.
-10. **Chemist (CH)**: A chemist may analyze the particles and makeup of minerals or other materials extracted².
-11. **Geological Engineer (GE)**: A geological engineer designs mines to ensure minerals' safe and efficient removal².
+9. **Mine Department (MD)**
+    - Positions:
+      1. Mine Blaster Worker (礦山爆破工) - MBW
+      2. Underground Miner (地下礦工) - UM
+      3. Heavy Equipment Operator (重型設備操作員) - HEO
+      4. Driller (鑽孔員) - DR
+      5. Electrician (電工) - EL
+      6. Material Planner (材料規劃師) - MTP
+      7. Health and Safety Specialist (健康與安全專員) - HSS
+      8. Mine Manager (礦山經理) - MNM
+      9. Chemist (化學家) - CH
+      10. Geological Engineer (地質工程師) - GE
 
 ---
 
