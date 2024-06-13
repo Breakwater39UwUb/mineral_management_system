@@ -41,12 +41,12 @@
     - [關聯屬性](#關聯屬性)
     - [實體詳細說明](#實體詳細說明)
     - [關聯詳細說明](#關聯詳細說明)
-  - [View 說明](#view-說明)
   - [使用者說明](#使用者說明)
   - [Schema](#schema)
     - [SQL](#sql)
     - [MariaDB Table Creation](#mariadb-table-creation)
     - [新增資料](#新增資料)
+  - [View 說明](#view-說明)
     - [建立 View](#建立-view)
     - [使用者建立及權限分配](#使用者建立及權限分配)
   - [資料表結果圖](#資料表結果圖)
@@ -225,7 +225,6 @@
 ### 實體
 
 1. 員工
-    <!-- TODO: 員工增加EMAIL -->
     1. 員工ID:長度為11的大寫英數字串，不可為空，格式為 `DEP-POS-ID`
         1. 三個部分以 `-` 符號分隔，字母皆為大寫。
         2. `DEP` 代表部門，以1至3位大寫英文字母編碼。
@@ -255,7 +254,6 @@
         1. 需為中華民國登記在案的銀行名稱。
         2. 參考來源: [財金資訊股份有限公司 總分支機構查詢](https://www.fisc.com.tw/TC/Service?CAID=51254999-5d15-4ddf-8e54-4b2cdb2a8399)
 3. 客戶
-    <!-- TODO: 客戶增加EMAIL -->
     1. 客戶ID:長度為10的大寫英數字串， 格式為 `Client-ID`， 不可為空。
         1. `Client` 為6個字元之大寫字母 `CLIENT`
         2. 第七個字元為 `-`
@@ -264,20 +262,19 @@
     3. 客戶電子郵件:長度為小於77的字串，格式為 `local-part@domain`，不可為空。
        1. `local-part`與`domain`以 `@`分隔
        2. `local-part` 為小於64個字元之字串，只可包含大小寫字母、0~9、特殊字元 ``!#$%&'*+-/=?^_`{|}~``
-       3. `domain`只接受以下域名
+       3. `local-part` 但不能作為首尾字符，也不能連續出現，若放在引號中則不受這些限制
+       4. `domain`只接受以下域名
           1. yahoo.com、yahoo.com.tw
           2. gmail.com
           3. outlook.com、hotmail.com、live.com、msn.com
-       4. 舉例列於 [實體詳細說明](#實體詳細說明)
+       5. 舉例列於 [實體詳細說明](#實體詳細說明)
 
 4. 供應商
-    <!-- TODO: 供應商增加EMAIL -->
     1. 供應商ID:長度為6的大寫英數字串， 格式為 `Supplier-ID`， 不可為空
         1. `Supplier` 為三個大寫字母`SUP`
         2. 第四個字元為 `-`
         3. `ID` 為長度二且隨機的大寫英數字串， `[A-Z0-9]{2}`
-    2. 供應商名稱:長度為50的中文字串， 不可為空
-        1. 需符合登記在經濟部公司法人名稱
+    2. 供應商名稱:長度為50的中文混和英數的字串， 不可為空
     3. 供應商電子郵件:長度小於253的字串，格式為 `local-part@domain`，不可為空。
        1. `local-part`與`domain`以 `@`分隔
        2. `local-part` 為小於64個字元之字串，只能包含大小寫字母、0~9、特殊字元 ``!#$%&'*+-/=?^_`{|}~``
@@ -300,11 +297,10 @@
         1. 前2個字元固定為 `WH`
         2. 第3個字元為 `-` 作為分隔符號
         3. `ID`為四個數字字元，`0000`至 `9999`
-    2. 倉庫地址:不超過70字元字串，格式為 `縣市-鄉鎮市區-村里-道路街名-巷-弄-號-樓-室`，不可為空。
+    2. 倉庫地址:不超過70字元字串，格式為 `縣市-鄉鎮市區-村里-路街-段-巷-弄-號-樓-室`，不可為空。
     3. 倉庫備註:不超過100字元字串，可為空。
 
 7. 物品
-    <!-- TODO: 單位增加"公克" -->
     1. 物品ID:長度為15的大寫英數字串， 不可為空
         1. `[A-Z]{5}[0-9]{10}`
         2. 無連接符號
@@ -316,7 +312,7 @@
         1. 若物品類別無法以個數計數時，單位為公斤
         2. 物品數量單位不另外分類與紀錄
     5. 數量單位:四個字元的字串，只可為以下字串。不可為空。
-        1. "公斤"、"公尺"、"立方公尺"、"平方公尺"、"個"、"單位"。
+        1. "公斤"、"公尺"、"立方公尺"、"平方公尺"、"個"、"單位"、"公克"。
         2. 對應物品類別選擇適當的單位。
     6. 物品單價:正整數，不可為空，預設值為0。
     7. 用途:長度為50的字串，可為空，預設值為NULL。
@@ -353,7 +349,7 @@
     4. 交易數量:正浮點數，不可為空。
         1. 對應`物品類別`，若為可數之物品，小數點後應為零。
     5. 數量單位:四個字元的字串，只可為以下字串。不可為空。
-        1. "公斤"、"公尺"、"立方公尺"、"平方公尺"、"個"、"單位"。
+        1. "公斤"、"公尺"、"立方公尺"、"平方公尺"、"個"、"單位"、"公克"。
         2. 對應物品類別選擇適當的單位。
 
 10. 收付款明細
@@ -476,18 +472,17 @@
 |      | 倉庫地址 | Alternate Key |
 |      | 倉庫備註 |               |
 
-| 實體   | 屬性         | Key           |
-| ------ | ------------ | ------------- |
-| 物品   | 物品ID       | Primary Key   |
-|        | 物品類別ID   | Foreign Key   |
-|        | 物品名稱     | Alternate Key |
-|        | 物品數量     |               |
-|        | 數量單位     |               |
-|        | 物品單價     |               |
-|        | 用途         |               |
-|        | 存放地點     | Foreign Key   |
-| 已刪除 | ~~購置日期~~ |               |
-|        | 供應商       | Foreign Key   |
+| 實體 | 屬性       | Key         |
+| ---- | ---------- | ----------- |
+| 物品 | 物品ID     | Primary Key |
+|      | 物品類別ID | Foreign Key |
+|      | 物品名稱   |             |
+|      | 物品數量   |             |
+|      | 數量單位   |             |
+|      | 物品單價   |             |
+|      | 用途       |             |
+|      | 存放地點   | Foreign Key |
+|      | 供應商     | Foreign Key |
 
 | 實體 | 屬性       | Key         |
 | ---- | ---------- | ----------- |
@@ -800,14 +795,14 @@
 - 004可單獨輸入，代表臺灣銀行，0040093為臺灣銀行臺南分行。
 - 0093不可單獨使用，因銀行分部代號不唯一。
 
-| 實體 | 屬性         | Domain                                                                                                       | 說明                                               |
-| ---- | ------------ | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| 客戶 | 客戶ID       | 格式為 `Client-ID`                                                                                           | 每位新客戶將由程式產生隨機`ID`並儲存至`客戶`資料表 |
-|      |              | `^CLIENT-[A-Z0-9]{3}$`                                                                                       | 此格式可記錄46656位客戶                            |
-|      | 客戶名稱     | 長度為30的中文字串                                                                                           | 考慮可能為個人與法人(公司)而設定此長度             |
-|      | 客戶電子郵件 | 格式為 `local-part@domain`                                                                                   | 客服部門將透過此電子郵件聯絡客戶                   |
-|      |              | ``local-part = ^[a-zA-Z0-9!#$%&'*+-/=?^_`{\|}~]{1,64}``                                                      | 客戶電子郵件只接受yahoo、gmail、outlook、hotmail、ms live與msn信箱 |
-|      |              | ```domain  = (yahoo\.com\|yahoo\.com\.tw\|gmail\.com \| outlook\.com\|hotmail\.com\|live\.com\|msn\.com)$``` |                                                    |
+| 實體 | 屬性         | Domain                                                                                                                                                                                | 說明                                               |
+| ---- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| 客戶 | 客戶ID       | 格式為 `Client-ID`                                                                                                                                                                    | 每位新客戶將由程式產生隨機`ID`並儲存至`客戶`資料表 |
+|      |              | `^CLIENT-[A-Z0-9]{3}$`                                                                                                                                                                | 此格式可記錄46656位客戶                            |
+|      | 客戶名稱     | 長度為30的中文字串                                                                                                                                                                    | 考慮可能為個人與法人(公司)而設定此長度             |
+|      | 客戶電子郵件 | 格式為 `local-part@domain`                                                                                                                                                            | 客服部門將透過此電子郵件聯絡客戶                   |
+|      |              | local-part ``^[a-zA-Z0-9!#$%&'*+-/=?^_`{\|}~]{1,64}``                                                      | 客戶電子郵件只接受yahoo、gmail、outlook、hotmail、ms live與msn信箱     |
+|      |              | domain ``(yahoo\.com\|yahoo\.com\.tw\|gmail\.com \| outlook\.com\|hotmail\.com\|live\.com\|msn\.com)$``                                                                          |                                                    |
 <!-- ^[a-zA-Z0-9!#$%&'*+\-\/=?^_`{|}~]{1,64}@(yahoo\.com|yahoo\.com\.tw|gmail\.com|outlook\.com|hotmail\.com|live\.com|msn\.com)$ -->
 
 - 客戶ID範例:
@@ -816,14 +811,15 @@
   - <CLIENT-A00@gmail.com>
   - <customer/mail@gmail.com>
 
-| 實體   | 屬性           | Domain                                                                    | 說明                               |
-| ------ | -------------- | ------------------------------------------------------------------------- | ---------------------------------- |
-| 供應商 | 供應商ID       | 格式為 `Supplier-ID`                                                      | 新合作的供應商，其ID由程式隨機產生 |
-|        |                | `^SUP-[A-Z0-9]{2}$`                                                       | 此編號可記錄1296個合作供應商       |
-|        | 供應商名稱     | 長度為50的中文字串                                                        | 需符合登記在經濟部公司法人名稱     |
-|        | 供應商電子郵件 | 格式為 `local-part@domain`                                                | 採購部門將透過此電子郵件聯絡供應商 |
-|        |                | local-part ``^(?=.{1,253}$)([a-zA-Z0-9!#$%&'*+\-\/=?^_`{\|}~]{1,64})``    | 網域將可接受大部分的公司電子郵件信箱|
-|        |                | domain ``((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+((?!-)[a-zA-Z-]{1,63}(?<!-))$`` |                                    |
+| 實體   | 屬性           | Domain                                                                      | 說明                               |
+| ------ | -------------- | ----------------------------------------------------------------------------| ---------------------------------- |
+| 供應商 | 供應商ID       | 格式為 `Supplier-ID`                                                        | 新合作的供應商，其ID由程式隨機產生 |
+|        |                | `^SUP-[A-Z0-9]{2}$`                                                         | 此編號可記錄1296個合作供應商       |
+|        | 供應商名稱     | 長度為50的中文混和英數的字串                                                | 供應商的公司名稱                   |
+|        | 供應商電子郵件 | 格式為 `local-part@domain`                                                  | 採購部門將透過此電子郵件聯絡供應商 |
+|        |                | local-part ``^(?=.{1,253}$)([a-zA-Z0-9!#$%&'*+\-\/=?^_`{\|}~]{1,64})``      |網域將可接受大部分的公司電子郵件信箱|
+|        |                | domain ``((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+((?!-)[a-zA-Z-]{1,63}(?<!-))$``  |   不支援local-part有`.`字元        |
+
 <!-- ^(?=.{1,253}$)([a-zA-Z0-9!#$%&'*+\-\/=?^_`{|}~]{1,64})@((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+((?!-)[a-zA-Z-]{1,63}(?<!-))$ -->
 供應商ID範例: SUP-A0
 客戶電子郵件範例: <GSS@gss.com.tw>
@@ -844,28 +840,28 @@
 3. 材料類
 4. 未分類
 
-| 實體 | 屬性     | Domain                                              | 說明                         |
-| ---- | -------- | --------------------------------------------------- | ---------------------------- |
-| 倉庫 | 倉庫ID   | 格式為 `WH-ID`                                      | 每間倉庫由程式隨機分配ID     |
-|      |          | `^WH-[0-9]{4}$`                                     | 此格式可記錄10000個倉庫       |
-|      | 倉庫地址 | 格式為 `縣市-鄉鎮市區-村里-道路街名-巷-弄-號-樓-室` | 倉庫實際地址，按照其格式填寫 |
-|      | 倉庫備註 | 不超過100字元字串                                   | 說明該倉庫的備註             |
+| 實體 | 屬性     | Domain                                             | 說明                                         |
+| ---- | -------- | -------------------------------------------------- | -------------------------------------------- |
+| 倉庫 | 倉庫ID   | 格式為 `WH-ID`                                     | 每間倉庫由程式隨機分配ID                     |
+|      |          | `^WH-[0-9]{4}$`                                    | 此格式可記錄10000個倉庫                      |
+|      | 倉庫地址 | 格式為 `縣市-鄉鎮市區-村里-路街-段-巷-弄-號-樓-室` | 倉庫實際地址，按照其格式填寫，格式以程式檢查 |
+|      | 倉庫備註 | 不超過100字元字串                                  | 說明該倉庫的備註                             |
 
 倉庫ID範例: WH-0000
 
-| 實體 | 屬性         | Domain                                   | 說明                                                  |
-| ---- | ------------ | ---------------------------------------- | ----------------------------------------------------- |
-| 物品 | 物品ID       | `[A-Z]{5}[0-9]{10}`                      | 物品的編號，由程式產生                                |
-|      |              |                                          | 此格式可記錄11，881，376，000，000，000種物品         |
-|      | 物品類別ID   | 長度為7的字串                            | 物品對應的類別所屬之類別ID                            |
-|      | 物品名稱     | 長度為50的字串                           | 物品類別，由類別判斷是否為商品，參考 `物品類別ID`     |
-|      | 物品數量     | 正浮點數                                 | 使用正浮點數可應對不同單位的計數，可數物品則小數只為0 |
-|      | 數量單位     | 公斤、公尺、立方公尺、平方公尺、個、單位 | 依照物品類別使用對應的單位                            |
-|      | 物品單價     | 正整數                                   | 物品為商品時，指物品售價；否則為購入的物品單價        |
-|      | 用途         | 長度為50的字串                           | 物品之說明欄位                                        |
-|      | 存放地點     | 長度為7的字串，參考`倉庫之倉庫ID`        | 物品存放地點                                          |
-| 刪除 | ~~購置日期~~ | 格式為 `yyyy-MM-dd`，不小公司建立日期    | 物品之購入日期                                        |
-|      | 供應商       | 長度為6的字串， 參考`供應商之供應商ID`   | 購入物品之供應商，物品為商品時，此欄位為空            |
+| 實體 | 屬性         | Domain                                         | 說明                                                  |
+| ---- | ------------ | ---------------------------------------------- | ----------------------------------------------------- |
+| 物品 | 物品ID       | `[A-Z]{5}[0-9]{10}`                            | 物品的編號，由程式產生                                |
+|      |              |                                                | 此格式可記錄1.1881376 × 10^16種物品         |
+|      | 物品類別ID   | 長度為7的字串                                  | 物品對應的類別所屬之類別ID                            |
+|      | 物品名稱     | 長度為50的字串                                 | 物品類別，由類別判斷是否為商品，參考 `物品類別ID`     |
+|      | 物品數量     | 正浮點數                                       | 使用正浮點數可應對不同單位的計數，可數物品則小數只為0 |
+|      | 數量單位     | 公斤、公尺、立方公尺、平方公尺、個、單位、公克 | 依照物品類別使用對應的單位                            |
+|      | 物品單價     | 正整數                                         | 物品為商品時，指物品售價；否則為購入的物品單價        |
+|      | 用途         | 長度為50的字串                                 | 物品之說明欄位                                        |
+|      | 存放地點     | 長度為7的字串，參考`倉庫之倉庫ID`              | 物品存放地點                                          |
+| 刪除 | ~~購置日期~~ | 格式為 `yyyy-MM-dd`，不小公司建立日期          | 物品之購入日期                                        |
+|      | 供應商       | 長度為6的字串， 參考`供應商之供應商ID`         | 購入物品之供應商，物品為商品時，此欄位為空            |
 
 物品ID範例: AAAAA0000000000
 
@@ -873,7 +869,7 @@
 | 實體 | 屬性       | Domain                                | 說明                                                   |
 | ---- | ---------- | ------------------------------------- | ------------------------------------------------------ |
 | 訂單 | 訂單編號   | 格式為 `DATE-OrderId`                 | 每個訂單編號將由程式產生，由下單日為基礎產生           |
-|      |            | `[0-9]{8}-[A-Za-z0-9]{3}`             | 每日可記錄238328、每年8698972筆訂單                    |
+|      |            | `[0-9]{8}-[A-Za-z0-9]{3}`             | 每日可記錄238,328、每年8,698,972筆訂單                 |
 |      | 付款日期   | 格式為 `yyyy-MM-dd`，不小公司建立日期 | 客戶付款日期，只記錄年月日                             |
 |      | 付款方式   | "匯款"或"付現"                        | 客戶付款方式，若為付現則`收付款明細`不紀錄銀行代號     |
 |      | 交易客戶   | 參考 `客戶之客戶ID`                   | 下單客戶之客戶ID，若`交易供應商`為空，此項目不可為空   |
@@ -881,14 +877,14 @@
 
 訂單編號範例: 20240101-Aa0
 
-| 實體     | 屬性     | Domain                                   | 說明                                                                       |
-| -------- | -------- | ---------------------------------------- | -------------------------------------------------------------------------- |
-| 訂單明細 | 明細ID   | 格式為 `DATE-OrderId-Detail`             | 每筆訂單為個別售出物品產生明細單，一筆訂單若有多項商品，則有由多張明細組成 |
-|          |          | `[0-9]{8}-[A-Za-z0-9]{3}-[0-9]{2}`       | 此格式以訂單編號為基礎，為每筆訂單提供100筆明細                            |
-|          | 訂單編號 | 格式為 `DATE-OrderId`                    | 參考 `訂單之訂單編號`                                                      |
-|          | 交易商品 | 長度為15的大寫英數字串                   | 參考 `物品實體之物品ID`                                                    |
-|          | 交易數量 | 正浮點數                                 | 使用正浮點數可應對不同單位的計數，可數物品則小數只為0                      |
-|          | 數量單位 | 公斤、公尺、立方公尺、平方公尺、個、單位 | 依照物品類別使用對應的單位                                                 |
+| 實體     | 屬性     | Domain                                         | 說明                                                                       |
+| -------- | -------- | ---------------------------------------------- | -------------------------------------------------------------------------- |
+| 訂單明細 | 明細ID   | 格式為 `DATE-OrderId-Detail`                   | 每筆訂單為個別售出物品產生明細單，一筆訂單若有多項商品，則有由多張明細組成 |
+|          |          | `[0-9]{8}-[A-Za-z0-9]{3}-[0-9]{2}`             | 此格式以訂單編號為基礎，為每筆訂單提供100筆明細                            |
+|          | 訂單編號 | 格式為 `DATE-OrderId`                          | 參考 `訂單之訂單編號`                                                      |
+|          | 交易商品 | 長度為15的大寫英數字串                         | 參考 `物品實體之物品ID`                                                    |
+|          | 交易數量 | 正浮點數                                       | 使用正浮點數可應對不同單位的計數，可數物品則小數只為0                      |
+|          | 數量單位 | 公斤、公尺、立方公尺、平方公尺、個、單位、公克 | 依照物品類別使用對應的單位                                                 |
 
 明細ID範例: 20240101-Aa0-00
 
@@ -1230,6 +1226,433 @@
     >
     > 如果您有更多關於SQL或數據庫設計的問題，請隨時提問！
 
+## 使用者說明
+
+## Schema
+
+### SQL
+
+1. 員工
+
+    ```sql
+    Employee (
+        EmployeeID: string,
+        Department: string,
+        Position: string,
+        EmployeeName: string,
+        EmployeeEmail: string
+    )
+    Primary Key: EmployeeID
+    Alternate Key: EmployeeEmail
+    ```
+
+2. 銀行
+
+    ```sql
+    Bank (
+        BankCode: string,
+        BankName: string
+    )
+    Primary Key: BankCode
+    ```
+
+3. 客戶
+
+    ```sql
+    Customer (
+        CustomerID: string,
+        CustomerName: string,
+        CustomerEmail: string
+    )
+    Primary Key: CustomerID
+    Alternate Key: CustomerEmail
+    ```
+
+4. 供應商
+
+    ```sql
+    Supplier (
+        SupplierID: string,
+        SupplierName: string
+        SupplierEmail: string
+    )
+    Primary Key: SupplierID
+    Alternate Key: SupplierEmail
+    ```
+
+5. 物品類別
+
+    ```sql
+    ItemCategory (
+        ItemCategoryID: string,
+        CategoryDescription: string
+    )
+    Primary Key: ItemCategoryID
+    ```
+
+6. 倉庫
+
+    ```sql
+    Warehouse (
+        WarehouseID: string,
+        WarehouseAddress: string,
+        WarehouseNote: string
+    )
+    Primary Key: WarehouseID
+    ```
+
+7. 物品
+
+    ```sql
+    Item (
+        ItemID: string,
+        ItemCategoryID: string, -- 包含關係
+        ItemName: string,
+        ItemQuantity: float,
+        QuantityUnit: string,
+        ItemPrice: integer,
+        Usage: string,
+        StorageLocation: string,    -- 存放關係
+        Supplier: string
+    )
+    Primary Key: ItemID
+    Foreign Key: ItemCategoryID References ItemCategory
+    Foreign Key: StorageLocation References Warehouse
+    Foreign Key: Supplier References Supplier
+    ```
+
+8. 訂單
+
+    ```sql
+    Orders (
+        OrderNumber: string,
+        PaymentDate: date,
+        PaymentMethod: string,
+        Customer: string,   -- 下單關係
+        Supplier: string,   -- 供應關係
+        EmployeeInCharge: string    -- 訂單處理關係
+    )
+    Primary Key: OrderNumber
+    Foreign Key: TransactionCustomer References Customer
+    Foreign Key: TransactionSupplier References Supplier
+    Foreign Key: EmployeeInCharge References Employee
+    ```
+
+9. 訂單明細
+
+    ```sql
+    OrderDetail (
+        DetailID: string,
+        OrderNumber: string,    -- 產生關係
+        TransactionItem: string,    -- 出貨關係
+        Quantity: float,
+        Unit: string
+    )
+    Primary Key: DetailID
+    Foreign Key: OrderNumber References Orders
+    Foreign Key: TransactionItem References Item
+    ```
+
+10. 收付款明細
+
+    ```sql
+    PaymentDetail (
+        BillNumber: string,
+        OrderNumber: string,
+        BankCode: string,   -- 確認關係
+        BankAccount: string,
+        TransactionDate: date,
+        Amount: integer,
+        RecordEmployee: string    -- 紀錄關係
+    )
+    Primary Key: BillNumber
+    Foreign Key: OrderNumber References Orders
+    Foreign Key: BankCode References Bank
+    ```
+
+11. 製造
+
+    ```sql
+    -- 製造關係
+    Manufacturing (
+        EmployeeID: string,
+        ItemID: string,
+        ManufacturingQuantity: float,
+        FixCost: integer,
+        ManufacturingDate: date
+    )
+    Primary Key: (EmployeeID, ItemID)
+    Foreign Key: EmployeeID References Employee
+    Foreign Key: ItemID References Item
+    ```
+
+### MariaDB Table Creation
+
+```sql
+-- 建立員工資料表
+CREATE TABLE
+    IF NOT EXISTS Employee (
+        EmployeeID CHAR(11) NOT NULL,
+        Department CHAR(10) NOT NULL,
+        Position CHAR(10) NOT NULL,
+        EmployeeName VARCHAR(10) NOT NULL,
+        EmployeeEmail CHAR(255) NOT NULL,
+        PRIMARY KEY (EmployeeID),
+        CONSTRAINT check_employee_id CHECK (
+            EmployeeID REGEXP '^[A-Z]{1,3}-[A-Z]{1,3}-[A-Z0-9]{3}$'
+        ),
+        CONSTRAINT check_employee_email CHECK (
+            EmployeeEmail REGEXP '^[A-Z]{1,3}-[A-Z]{1,3}-[A-Z0-9]{3}@company.com$'
+        )
+    );
+```
+
+```sql
+-- 建立銀行資料表
+CREATE TABLE
+    IF NOT EXISTS Bank (
+        BankCode CHAR(7) NOT NULL,
+        BankName VARCHAR(30) NOT NULL,
+        PRIMARY KEY (BankCode),
+        CONSTRAINT check_bank CHECK (
+            BankCode REGEXP '[0-9]{3}'
+            OR BankCode REGEXP '[0-9]{7}'
+        )
+    );
+```
+
+```sql
+-- 建立客戶資料表
+CREATE TABLE
+    IF NOT EXISTS Customer (
+        CustomerID CHAR(10) NOT NULL,
+        CustomerName VARCHAR(30) NOT NULL,
+        CustomerEmail VARCHAR(77) NOT NULL,
+        PRIMARY KEY (CustomerID),
+        CONSTRAINT check_customer_id CHECK (
+            CustomerID REGEXP '^CLIENT-[A-Z0-9]{3}$'
+        ),
+        CONSTRAINT check_customer_email CHECK (
+            CustomerEmail REGEXP '^[a-zA-Z0-9!#$%&\\''*+\-\/=?^_`{|}~]{1,64}@(yahoo\.com|yahoo\.com\.tw|gmail\.com|outlook\.com|hotmail\.com|live\.com|msn\.com)$'
+        )
+    );
+```
+
+```sql
+-- 建立供應商資料表
+CREATE TABLE
+    IF NOT EXISTS Supplier (
+        SupplierID CHAR(6) NOT NULL,
+        SupplierName VARCHAR(50) NOT NULL,
+        SupplierEmail VARCHAR(253) NOT NULL,
+        PRIMARY KEY (SupplierID),
+        CONSTRAINT check_supplier_id CHECK (
+            SupplierID REGEXP '^SUP-[A-Z0-9]{2}$'
+        ),
+        CONSTRAINT check_supplier_email CHECK (
+            SupplierEmail REGEXP '^(?=.{1,253}$)([a-zA-Z0-9!#$%&\\''*+\-\/=?^_`{|}~]{1,64})@((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+((?!-)[a-zA-Z-]{1,63}(?<!-))$'
+        )
+    );
+```
+
+```sql
+-- 建立物品類別資料表
+CREATE TABLE
+    IF NOT EXISTS ItemCategory (
+        ItemCategoryID CHAR(7) NOT NULL,
+        CategoryDescription VARCHAR(10) NOT NULL DEFAULT '未分類',
+        PRIMARY KEY (ItemCategoryID),
+        CONSTRAINT check_category_id CHECK (
+            ItemCategoryID REGEXP '^CAT-[0-9]{3}$'
+        )
+    );
+```
+
+```sql
+-- 建立倉庫資料表
+CREATE TABLE
+    IF NOT EXISTS Warehouse (
+        WarehouseID CHAR(7) NOT NULL,
+        Address VARCHAR(70) NOT NULL,
+        Note VARCHAR(100),
+        PRIMARY KEY (WarehouseID),
+        CONSTRAINT check_warehouse_id CHECK (
+            WarehouseID REGEXP '^WH-[0-9]{4}$'
+        )
+    );
+```
+
+```sql
+-- 建立物品資料表
+CREATE TABLE
+    IF NOT EXISTS Item (
+        ItemID CHAR(15) NOT NULL,
+        ItemCategoryID CHAR(7) NOT NULL,
+        ItemName VARCHAR(50) NOT NULL,
+        ItemQuantity FLOAT NOT NULL DEFAULT 0.0,
+        QuantityUnit CHAR(4) NOT NULL,
+        ItemPrice INT NOT NULL DEFAULT 0,
+        `Usage` VARCHAR(50) DEFAULT NULL,
+        StorageLocation CHAR(7) NOT NULL,
+        Supplier CHAR(6) NOT NULL,
+        PRIMARY KEY (ItemID),
+        FOREIGN KEY (ItemCategoryID) REFERENCES ItemCategory (ItemCategoryID),
+        FOREIGN KEY (StorageLocation) REFERENCES Warehouse (WarehouseID),
+        FOREIGN KEY (Supplier) REFERENCES Supplier (SupplierID),
+        CONSTRAINT check_item CHECK (ItemID REGEXP '[A-Z]{5}[0-9]{10}'),
+        CONSTRAINT check_unit CHECK (
+            QuantityUnit IN ('公斤', '公尺', '立方公尺', '平方公尺', '個', '單位', '公克')
+        )
+    );
+```
+
+```sql
+-- 建立訂單資料表
+CREATE TABLE
+    IF NOT EXISTS Orders (
+        OrderNumber CHAR(12) NOT NULL,
+        PaymentDate DATE,
+        PaymentMethod CHAR(2) NOT NULL,
+        Customer CHAR(10),   -- 下單關係
+        Supplier CHAR(6),    -- 供應關係,
+        EmployeeInCharge CHAR(11) NOT NULL,    -- 訂單處理關係
+        PRIMARY KEY (OrderNumber),
+        FOREIGN KEY (Customer) REFERENCES Customer (CustomerID),
+        FOREIGN KEY (Supplier) REFERENCES Supplier (SupplierID),
+        FOREIGN KEY (EmployeeInCharge) REFERENCES Employee(EmployeeID),
+        CONSTRAINT check_order_number CHECK (
+            OrderNumber REGEXP '^[0-9]{8}-[A-Za-z0-9]{3}$'
+        ),
+        CONSTRAINT check_payment_method CHECK (
+            PaymentMethod IN ('匯款', '付現')
+        ),
+        CONSTRAINT check_transaction_parties CHECK (
+            Customer IS NOT NULL
+            OR Supplier IS NOT NULL
+        )
+    );
+```
+
+```sql
+-- 建立訂單明細資料表
+CREATE TABLE
+    IF NOT EXISTS OrderDetail (
+        DetailID CHAR(15) NOT NULL,
+        OrderNumber CHAR(12) NOT NULL,      -- 產生關係
+        TransactionItem CHAR(15) NOT NULL,
+        Quantity FLOAT NOT NULL,
+        Unit CHAR(4) NOT NULL,
+        PRIMARY KEY (DetailID),
+        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber),
+        FOREIGN KEY (TransactionItem) REFERENCES Item (ItemID),
+        CONSTRAINT check_detail_id CHECK (
+            DetailID REGEXP '^[0-9]{8}-[A-Za-z0-9]{3}-[0-9]{2}$'
+        ),
+        CONSTRAINT check_unit CHECK (
+            Unit IN ('公斤', '公尺', '立方公尺', '平方公尺', '個', '單位', '公克')
+        )
+    );
+```
+
+```sql
+-- 建立收付款明細資料表
+CREATE TABLE
+    IF NOT EXISTS PaymentDetail (
+        BillNumber CHAR(10) NOT NULL,
+        OrderNumber CHAR(12) NOT NULL,
+        BankCode CHAR(7),
+        BankAccount CHAR(14),
+        TransactionDate DATE,
+        Amount INT NOT NULL,
+        RecordEmployee CHAR(11) NOT NULL,
+        PRIMARY KEY (BillNumber),
+        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber),
+        FOREIGN KEY (BankCode) REFERENCES Bank (BankCode),
+        FOREIGN KEY (RecordEmployee) REFERENCES Employee(EmployeeID),
+        CONSTRAINT check_bill_number CHECK (
+            BillNumber REGEXP '^[A-Za-z0-9]{3}-[0-9]{6}$'
+        ),
+        CONSTRAINT check_bank_account CHECK (
+            BankAccount REGEXP '^[0-9]{14}$'
+        )
+    );
+```
+
+```sql
+-- 建立製造關聯資料表
+CREATE TABLE
+    IF NOT EXISTS Manufacturing (
+        EmployeeID CHAR(11) NOT NULL,
+        ItemID CHAR(15) NOT NULL,
+        ManufacturingQuantity FLOAT NOT NULL,
+        SalesCost INT DEFAULT NULL,
+        ManufacturingDate DATE DEFAULT NULL,
+        PRIMARY KEY (EmployeeID, ItemID),
+        FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID),
+        FOREIGN KEY (ItemID) REFERENCES Item (ItemID)
+    );
+```
+
+### 新增資料
+
+範例資料可參考 [Reference data](./reference_data.md)
+
+| 員工ID      | 姓名   | 部門 | 職位 | 員工電子郵件                   |
+| ----------- | ------ | ---- | ---- | ------------------------------ |
+| PD-PCL-IQR  | 鄭詩雅 | PD   | PCL  | <PD-PCL-IQR@company.com>  |
+| PD-PCS-TH5  | 蔡佳燕 | PD   | PCS  | <PD-PCS-TH5@company.com>  |
+| MSD-MCO-LBJ | 林芷儀 | MSD  | MCO  | <MSD-MCO-LBJ@company.com> |
+| HRD-HRC-TT4 | 黃慕萱 | HRD  | HRC  | <HRD-HRC-TT4@company.com> |
+| ITD-NE-6E7  | 劉曉萍 | ITD  | NE   | <ITD-NE-6E7@company.com>  |
+| MD-GE-56Q   | 王鵬翔 | MD   | GE   | <MD-GE-56Q@company.com>   |
+| CSD-AM-GW3  | 陳昱廷 | CSD  | AM   | <CSD-AM-GW3@company.com>  |
+| MSD-MAN-M6N | 張書豪 | MSD  | MAN  | <MSD-MAN-M6N@company.com> |
+| PD-PAG-52V  | 楊智淵 | PD   | PAG  | <PD-PAG-52V@company.com>  |
+| PD-PAG-D0Z  | 吳柏蒼 | PD   | PAG  | <PD-PAG-D0Z@company.com>  |
+
+| 銀行代號 | 銀行名稱 |
+| -------- | -------- |
+|          |          |
+
+| 客戶ID | 客戶名稱 | 客戶電子郵件 |
+| ------ | -------- | ------------ |
+|        |          |              |
+
+| 供應商ID | 供應商名稱 | 供應商電子郵件 |
+| -------- | ---------- | -------------- |
+|          |            |                |
+|          |            |                |
+
+| 物品類別ID | 類別說明 |
+| ---------- | -------- |
+|            |          |
+
+| 倉庫ID | 倉庫地址 |倉庫備註|
+| ------ | -------- | --- |
+|        |          |     |
+|        |          |     |
+
+| 物品ID | 物品類別ID | 物品名稱 | 物品數量 | 數量單位 | 物品單價 | 用途 | 存放地點 | 供應商 |
+| ------ | ---------- | -------- | -------- | -------- | -------- | ---- | -------- | ------ |
+| 交易   |            |          |          |          |          |      |          |        |
+
+| 訂單編號 | 付款日期 | 付款方式 | 交易客戶 | 交易供應商 |
+| -------- | -------- | -------- | -------- | ---------- |
+|          |          |          |          |            |
+
+| 明細ID | 訂單編號 | 物品ID | 購買數量 | 數量單位 |
+| ------ | -------- | ------ | -------- | -------- |
+|        |          |        |          |          |
+
+| 帳單編號 | 訂單編號 | 銀行代號 | 銀行帳號 | 交易日期 | 金額 |
+| -------- | -------- | -------- | -------- | -------- | ---- |
+|          |          |          |          |          |      |
+
+| 員工ID | 物品ID | 製造數量 | 銷貨成本 | 製造日期 |
+| ------ | ------ | -------- | -------- | -------- |
+|        |        |          |          |          |
+|        |        |          |          |          |
+
 ## View 說明
 
 1. 列出類別為CAT-000的物品
@@ -1426,432 +1849,6 @@
 
 銷售可能需要列出所有訂單和負責的員工
 
-## 使用者說明
-
-## Schema
-
-### SQL
-
-1. 員工
-
-    ```sql
-    Employee (
-        EmployeeID: string,
-        Department: string,
-        Position: string,
-        EmployeeName: string,
-        EmployeeEmail: string
-    )
-    Primary Key: EmployeeID
-    Alternate Key: EmployeeEmail
-    ```
-
-2. 銀行
-
-    ```sql
-    Bank (
-        BankCode: string,
-        BankName: string
-    )
-    Primary Key: BankCode
-    ```
-
-3. 客戶
-
-    ```sql
-    Customer (
-        CustomerID: string,
-        CustomerName: string,
-        CustomerEmail: string
-    )
-    Primary Key: CustomerID
-    Alternate Key: CustomerEmail
-    ```
-
-4. 供應商
-
-    ```sql
-    Supplier (
-        SupplierID: string,
-        SupplierName: string
-        SupplierEmail: string
-    )
-    Primary Key: SupplierID
-    Alternate Key: SupplierEmail
-    ```
-
-5. 物品類別
-
-    ```sql
-    ItemCategory (
-        ItemCategoryID: string,
-        CategoryDescription: string
-    )
-    Primary Key: ItemCategoryID
-    ```
-
-6. 倉庫
-
-    ```sql
-    Warehouse (
-        WarehouseID: string,
-        WarehouseAddress: string,
-        WarehouseNote: string
-    )
-    Primary Key: WarehouseID
-    ```
-
-7. 物品
-
-    ```sql
-    Item (
-        ItemID: string,
-        ItemCategoryID: string, -- 包含關係
-        ItemName: string,
-        ItemQuantity: float,
-        QuantityUnit: string,
-        ItemPrice: integer,
-        Usage: string,
-        StorageLocation: string,    -- 存放關係
-        Supplier: string
-    )
-    Primary Key: ItemID
-    Foreign Key: ItemCategoryID References ItemCategory
-    Foreign Key: StorageLocation References Warehouse
-    Foreign Key: Supplier References Supplier
-    ```
-
-8. 訂單
-
-    ```sql
-    Orders (
-        OrderNumber: string,
-        PaymentDate: date,
-        PaymentMethod: string,
-        Customer: string,   -- 下單關係
-        Supplier: string,   -- 供應關係
-        EmployeeInCharge: string    -- 訂單處理關係
-    )
-    Primary Key: OrderNumber
-    Foreign Key: TransactionCustomer References Customer
-    Foreign Key: TransactionSupplier References Supplier
-    Foreign Key: EmployeeInCharge References Employee
-    ```
-
-9. 訂單明細
-
-    ```sql
-    OrderDetail (
-        DetailID: string,
-        OrderNumber: string,    -- 產生關係
-        TransactionItem: string,    -- 出貨關係
-        Quantity: float,
-        Unit: string
-    )
-    Primary Key: DetailID
-    Foreign Key: OrderNumber References Orders
-    Foreign Key: TransactionItem References Item
-    ```
-
-10. 收付款明細
-
-    ```sql
-    PaymentDetail (
-        BillNumber: string,
-        OrderNumber: string,
-        BankCode: string,   -- 確認關係
-        BankAccount: string,
-        TransactionDate: date,
-        Amount: integer,
-        RecordEmployee: string    -- 紀錄關係
-    )
-    Primary Key: BillNumber
-    Foreign Key: OrderNumber References Orders
-    Foreign Key: BankCode References Bank
-    ```
-
-11. 製造
-
-    ```sql
-    -- 製造關係
-    Manufacturing (
-        EmployeeID: string,
-        ItemID: string,
-        ManufacturingQuantity: float,
-        FixCost: integer,
-        ManufacturingDate: date
-    )
-    Primary Key: (EmployeeID, ItemID)
-    Foreign Key: EmployeeID References Employee
-    Foreign Key: ItemID References Item
-    ```
-
-### MariaDB Table Creation
-
-```sql
--- 建立員工資料表
-CREATE TABLE
-    IF NOT EXISTS Employee (
-        EmployeeID VARCHAR(11) NOT NULL,
-        Department VARCHAR(10) NOT NULL,
-        Position VARCHAR(10) NOT NULL,
-        EmployeeName VARCHAR(10) NOT NULL,
-        EmployeeEmail VARCHAR(255) NOT NULL,
-        PRIMARY KEY (EmployeeID),
-        CONSTRAINT check_employee_id CHECK (
-            EmployeeID REGEXP '^[A-Z]{1,3}-[A-Z]{1,3}-[A-Z0-9]{3}$'
-        ),
-        CONSTRAINT check_employee_email CHECK (
-            EmployeeEmail REGEXP '^[A-Z]{1,3}-[A-Z]{1,3}-[A-Z0-9]{3}@company.com$'
-        )
-    );
-```
-
-```sql
--- 建立銀行資料表
-CREATE TABLE
-    IF NOT EXISTS Bank (
-        BankCode VARCHAR(7) NOT NULL,
-        BankName VARCHAR(30) NOT NULL,
-        PRIMARY KEY (BankCode),
-        CONSTRAINT check_bank CHECK (
-            BankCode REGEXP '[0-9]{3}'
-            OR BankCode REGEXP '[0-9]{7}'
-        )
-    );
-```
-
-```sql
--- 建立客戶資料表
-CREATE TABLE
-    IF NOT EXISTS Customer (
-        CustomerID VARCHAR(10) NOT NULL,
-        CustomerName VARCHAR(30) NOT NULL,
-        CustomerEmail VARCHAR(77) NOT NULL,
-        PRIMARY KEY (CustomerID),
-        CONSTRAINT check_customer_id CHECK (
-            CustomerID REGEXP '^CLIENT-[A-Z0-9]{3}$'
-        ),
-        CONSTRAINT check_customer_email CHECK (
-            CustomerEmail REGEXP '^[a-zA-Z0-9!#$%&\\''*+\-\/=?^_`{|}~]{1,64}@(yahoo\.com|yahoo\.com\.tw|gmail\.com|outlook\.com|hotmail\.com|live\.com|msn\.com)$'
-        )
-    );
-```
-
-```sql
--- 建立供應商資料表
-CREATE TABLE
-    IF NOT EXISTS Supplier (
-        SupplierID VARCHAR(6) NOT NULL,
-        SupplierName VARCHAR(50) NOT NULL,
-        SupplierEmail VARCHAR(253) NOT NULL,
-        PRIMARY KEY (SupplierID),
-        CONSTRAINT check_supplier_id CHECK (
-            SupplierID REGEXP '^SUP-[A-Z0-9]{2}$'
-        ),
-        CONSTRAINT check_supplier_email CHECK (
-            SupplierEmail REGEXP '^(?=.{1,253}$)([a-zA-Z0-9!#$%&\\''*+\-\/=?^_`{|}~]{1,64})@((?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+((?!-)[a-zA-Z-]{1,63}(?<!-))$'
-        )
-    );
-```
-
-```sql
--- 建立物品類別資料表
-CREATE TABLE
-    IF NOT EXISTS ItemCategory (
-        ItemCategoryID VARCHAR(7) NOT NULL,
-        CategoryDescription VARCHAR(10) NOT NULL DEFAULT '未分類',
-        PRIMARY KEY (ItemCategoryID),
-        CONSTRAINT check_category_id CHECK (
-            ItemCategoryID REGEXP '^CAT-[0-9]{3}$'
-        )
-    );
-```
-
-```sql
--- 建立倉庫資料表
-CREATE TABLE
-    IF NOT EXISTS Warehouse (
-        WarehouseID VARCHAR(7) NOT NULL,
-        Address VARCHAR(70) NOT NULL,
-        Note VARCHAR(100),
-        PRIMARY KEY (WarehouseID),
-        CONSTRAINT check_warehouse_id CHECK (
-            WarehouseID REGEXP '^WH-[0-9]{4}$'
-        )
-    );
-```
-
-```sql
--- 建立物品資料表
-CREATE TABLE
-    IF NOT EXISTS Item (
-        ItemID VARCHAR(15) NOT NULL,
-        ItemCategoryID VARCHAR(7) NOT NULL,
-        ItemName VARCHAR(50) NOT NULL,
-        ItemQuantity FLOAT NOT NULL DEFAULT 0.0,
-        QuantityUnit VARCHAR(4) NOT NULL,
-        ItemPrice INT NOT NULL DEFAULT 0,
-        `Usage` VARCHAR(50) DEFAULT NULL,
-        StorageLocation VARCHAR(7) NOT NULL,
-        Supplier VARCHAR(6) NOT NULL,
-        PRIMARY KEY (ItemID),
-        FOREIGN KEY (ItemCategoryID) REFERENCES ItemCategory (ItemCategoryID),
-        FOREIGN KEY (StorageLocation) REFERENCES Warehouse (WarehouseID),
-        FOREIGN KEY (Supplier) REFERENCES Supplier (SupplierID),
-        CONSTRAINT check_item CHECK (ItemID REGEXP '[A-Z]{5}[0-9]{10}'),
-        CONSTRAINT check_unit CHECK (
-            QuantityUnit IN ('公斤', '公尺', '立方公尺', '平方公尺', '個', '單位')
-        )
-    );
-```
-
-```sql
--- 建立訂單資料表
-CREATE TABLE
-    IF NOT EXISTS Orders (
-        OrderNumber VARCHAR(12) NOT NULL,
-        PaymentDate DATE,
-        PaymentMethod VARCHAR(2) NOT NULL,
-        Customer VARCHAR(10),   -- 下單關係
-        Supplier VARCHAR(6),    -- 供應關係,
-        EmployeeInCharge VARCHAR(11) NOT NULL,    -- 訂單處理關係
-        PRIMARY KEY (OrderNumber),
-        FOREIGN KEY (Customer) REFERENCES Customer (CustomerID),
-        FOREIGN KEY (Supplier) REFERENCES Supplier (SupplierID),
-        FOREIGN KEY (EmployeeInCharge) REFERENCES Employee(EmployeeID),
-        CONSTRAINT check_order_number CHECK (
-            OrderNumber REGEXP '^[0-9]{8}-[A-Za-z0-9]{3}$'
-        ),
-        CONSTRAINT check_payment_method CHECK (
-            PaymentMethod IN ('匯款', '付現')
-        ),
-        CONSTRAINT check_transaction_parties CHECK (
-            Customer IS NOT NULL
-            OR Supplier IS NOT NULL
-        )
-    );
-```
-
-```sql
--- 建立訂單明細資料表
-CREATE TABLE
-    IF NOT EXISTS OrderDetail (
-        DetailID VARCHAR(15) NOT NULL,
-        OrderNumber VARCHAR(12) NOT NULL,      -- 產生關係
-        TransactionItem VARCHAR(15) NOT NULL,
-        Quantity FLOAT NOT NULL,
-        Unit VARCHAR(4) NOT NULL,
-        PRIMARY KEY (DetailID),
-        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber),
-        FOREIGN KEY (TransactionItem) REFERENCES Item (ItemID),
-        CONSTRAINT check_detail_id CHECK (
-            DetailID REGEXP '^[0-9]{8}-[A-Za-z0-9]{3}-[0-9]{2}$'
-        ),
-        CONSTRAINT check_unit CHECK (
-            Unit IN ('公斤', '公尺', '立方公尺', '平方公尺', '個', '單位')
-        )
-    );
-```
-
-```sql
--- 建立收付款明細資料表
-CREATE TABLE
-    IF NOT EXISTS PaymentDetail (
-        BillNumber VARCHAR(10) NOT NULL,
-        OrderNumber VARCHAR(12) NOT NULL,
-        BankCode VARCHAR(7),
-        BankAccount VARCHAR(14),
-        TransactionDate DATE,
-        Amount INT NOT NULL,
-        RecordEmployee VARCHAR(11) NOT NULL,
-        PRIMARY KEY (BillNumber),
-        FOREIGN KEY (OrderNumber) REFERENCES Orders (OrderNumber),
-        FOREIGN KEY (BankCode) REFERENCES Bank (BankCode),
-        FOREIGN KEY (RecordEmployee) REFERENCES Employee(EmployeeID),
-        CONSTRAINT check_bill_number CHECK (
-            BillNumber REGEXP '^[A-Za-z0-9]{3}-[0-9]{6}$'
-        ),
-        CONSTRAINT check_bank_account CHECK (
-            BankAccount REGEXP '^[0-9]{14}$'
-        )
-    );
-```
-
-```sql
--- 建立製造關聯資料表
-CREATE TABLE
-    IF NOT EXISTS Manufacturing (
-        EmployeeID VARCHAR(11) NOT NULL,
-        ItemID VARCHAR(15) NOT NULL,
-        ManufacturingQuantity FLOAT NOT NULL,
-        SalesCost INT DEFAULT NULL,
-        ManufacturingDate DATE DEFAULT NULL,
-        PRIMARY KEY (EmployeeID, ItemID),
-        FOREIGN KEY (EmployeeID) REFERENCES Employee (EmployeeID),
-        FOREIGN KEY (ItemID) REFERENCES Item (ItemID)
-    );
-```
-
-### 新增資料
-
-範例資料可參考 [Reference data](./reference_data.md)
-
-| 員工ID      | 姓名   | 部門 | 職位 | 員工電子郵件                   |
-| ----------- | ------ | ---- | ---- | ------------------------------ |
-| PD-PCL-IQR  | 鄭詩雅 | PD   | PCL  | <PD-PCL-IQR@company.com>  |
-| PD-PCS-TH5  | 蔡佳燕 | PD   | PCS  | <PD-PCS-TH5@company.com>  |
-| MSD-MCO-LBJ | 林芷儀 | MSD  | MCO  | <MSD-MCO-LBJ@company.com> |
-| HRD-HRC-TT4 | 黃慕萱 | HRD  | HRC  | <HRD-HRC-TT4@company.com> |
-| ITD-NE-6E7  | 劉曉萍 | ITD  | NE   | <ITD-NE-6E7@company.com>  |
-| MD-GE-56Q   | 王鵬翔 | MD   | GE   | <MD-GE-56Q@company.com>   |
-| CSD-AM-GW3  | 陳昱廷 | CSD  | AM   | <CSD-AM-GW3@company.com>  |
-| MSD-MAN-M6N | 張書豪 | MSD  | MAN  | <MSD-MAN-M6N@company.com> |
-| PD-PAG-52V  | 楊智淵 | PD   | PAG  | <PD-PAG-52V@company.com>  |
-| PD-PAG-D0Z  | 吳柏蒼 | PD   | PAG  | <PD-PAG-D0Z@company.com>  |
-
-| 銀行代號 | 銀行名稱 |
-| -------- | -------- |
-|          |          |
-
-| 客戶ID | 客戶名稱 | 客戶電子郵件 |
-| ------ | -------- | ------------ |
-|        |          |              |
-
-| 供應商ID | 供應商名稱 | 供應商電子郵件 |
-| -------- | ---------- | -------------- |
-|          |            |                |
-|          |            |                |
-
-| 物品類別ID | 類別說明 |
-| ---------- | -------- |
-|            |          |
-
-| 倉庫ID | 倉庫地址 |倉庫備註|
-| ------ | -------- | --- |
-|        |          |     |
-|        |          |     |
-
-| 物品ID | 物品類別ID | 物品名稱 | 物品數量 | 數量單位 | 物品單價 | 用途 | 存放地點 | 供應商 |
-| ------ | ---------- | -------- | -------- | -------- | -------- | ---- | -------- | ------ |
-| 交易   |            |          |          |          |          |      |          |        |
-
-| 訂單編號 | 付款日期 | 付款方式 | 交易客戶 | 交易供應商 |
-| -------- | -------- | -------- | -------- | ---------- |
-|          |          |          |          |            |
-
-| 明細ID | 訂單編號 | 物品ID | 購買數量 | 數量單位 |
-| ------ | -------- | ------ | -------- | -------- |
-|        |          |        |          |          |
-
-| 帳單編號 | 訂單編號 | 銀行代號 | 銀行帳號 | 交易日期 | 金額 |
-| -------- | -------- | -------- | -------- | -------- | ---- |
-|          |          |          |          |          |      |
-
-| 員工ID | 物品ID | 製造數量 | 銷貨成本 | 製造日期 |
-| ------ | ------ | -------- | -------- | -------- |
-|        |        |          |          |          |
-|        |        |          |          |          |
 
 ### 建立 View
 
