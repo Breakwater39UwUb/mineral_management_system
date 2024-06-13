@@ -492,7 +492,6 @@
 | 實體 | 屬性       | Key         |
 | ---- | ---------- | ----------- |
 | 訂單 | 訂單編號   | Primary Key |
-|      | 下單日期   |             |
 |      | 付款日期   |             |
 |      | 付款方式   |             |
 |      | 交易客戶   | Foreign Key |
@@ -676,28 +675,119 @@
 - 員工ID範例: POD-BL-A00
 - 員工電子郵件範例: <POD-BL-A00@company.com>
 
-部門縮寫範例
+部門與職位縮寫範例
 
-1. `MSD`: Marketing and Sales Department， 行銷與銷售部門
-2. `FD`: Finance Department， 財務部門
-3. `POD`: Production/Operations Department， 生產/運營部門
-4. `RDD`: Research and Development Department， 研究與開發部門
-5. `CSD`: Customer Service Department， 客戶服務部門
-6. `PD`: Purchasing Department， 採購部門
-7. `ITD`: IT Department， 資訊科技部門
-
-職位縮寫範例
-
-1. `BL`: Blaster， 爆破工
-2. `UM`: Underground Miner， 地下礦工
-3. `HEO`: Heavy Equipment Operator， 重型設備操作員
-4. `DR`: Driller， 鑽孔員
-5. `EL`: Electrician， 電工
-6. `MP`: Material Planner， 物料規劃員
-7. `HSS`: Health and Safety Specialist， 健康與安全專員
-8. `MM`: Mine Manager， 礦場經理
-9. `CH`: Chemist， 化學家
-10. `GE`: Geological Engineer， 地質工程師
+1. `MSD`: Marketing and Sales Department，行銷與銷售部門
+   1. `MD`: Marketing Director , 行銷總監
+   2. `MMG`: Marketing Manager , 行銷經理
+   3. `MCO`: Marketing Coordinator , 行銷協調員
+   4. `MAN`: Marketing Analyst , 行銷分析師
+   5. `MS`: Marketing Specialist , 行銷專員
+   6. `SD`: Sales Director , 銷售總監
+   7. `SMG`: Sales Manager , 銷售經理
+   8. `SRE`: Sales Representative , 銷售代表
+   9. `SS`: Sales Specialist , 銷售專員
+   10. `SC`: Sales Consultant , 銷售顧問
+2. `FD`: Finance Department，財務部門
+    1. `FMG`: Finance Manager , 財務經理
+    2. `FAN`: Financial Analyst , 財務分析師
+    3. `FCO`: Financial Controller , 財務控制員
+    4. `FCL`: Finance Clerk , 財務文員
+    5. `FAD`: Financial Advisor , 財務顧問
+    6. `FM`: Finance Manager , 財務經理
+    7. `ACC`: Accountant , 會計師
+    8. `FA`: Financial Analyst , 財務分析師
+    9. `AUD`: Auditor , 審計員
+    10. `CON`: Controller , 控制員
+    11. `TRE`: Treasurer , 財務主管
+    12. `BA`: Budget Analyst , 預算分析師
+    13. `TS`: Tax Specialist , 稅務專員
+    14. `PC`: Payroll Clerk , 工資管理員
+3. `POD`: Production/Operations Department， 生產運營部門
+    1. `OMG`: Operations Manager , 運營經理
+    2. `PMG`: Production Manager , 生產經理
+    3. `OAN`: Operations Analyst , 運營分析師
+    4. `PPL`: Production Planner , 生產規劃員
+    5. `OM`: Operations Manager , 運營經理
+    6. `PS`: Production Supervisor , 生產主管
+    7. `WHS`: Warehouse Specialist , 倉管人員
+    8. `IM`: Inventory Manager , 庫存經理
+    9. `PM`: Plant Manager , 工廠經理
+    10. `PW`: Production Worker , 生產工人
+    11. `QCS`: Quality Control Specialist , 品質控制專員
+    12. `PP`: Production Planner , 生產計劃員
+    13. `LC`: Logistics Coordinator , 物流協調員
+    14. `OA`: Operations Analyst , 運營分析師
+    15. `QAM`: Quality Assurance Manager , 品質保證經理
+4. `CSD`: Customer Service Department，客戶服務部門
+    1. `CSM`: Customer Service Manager , 客戶服務經理
+    2. `CSR`: Customer Service Representative , 客戶服務代表
+    3. `CSS`: Customer Support Specialist , 客戶支援專員
+    4. `CEM`: Customer Experience Manager , 客戶體驗經理
+    5. `CSR`: Customer Service Representative , 客服代表
+    6. `HDS`: Help Desk Specialist , 幫助台專員
+    7. `CSM`: Customer Service Manager , 客服經理
+    8. `CCA`: Call Center Agent , 服務中心代理
+    9. `TSS`: Technical Support Specialist , 技術支援專員
+    10. `AM`: Account Manager , 客戶經理
+    11. `CRM`: Client Relations Manager , 客戶關係經理
+    12. `SDA`: Service Desk Analyst , 服務台分析師
+    13. `CSE`: Customer Support Engineer , 客戶支援工程師
+    14. `CEM`: Customer Experience Manager , 客戶體驗經理
+5. `PD`: Purchasing Department，採購部門
+    1. `PMG`: Purchasing Manager , 採購經理
+    2. `PAG`: Purchasing Agent , 採購代理人
+    3. `PCS`: Procurement Specialist , 採購專員
+    4. `PCL`: Purchasing Clerk , 採購文員
+    5. `PAN`: Procurement Analyst , 採購分析師
+    6. `PM`: Purchasing Manager , 採購經理
+    7. `BUY`: Buyer , 採購員
+    8. `PS`: Procurement Specialist , 採購專員
+    9. `PC`: Purchasing Clerk , 採購文員
+    10. `SCA`: Supply Chain Analyst , 供應鏈分析師
+    11. `VM`: Vendor Manager , 供應商經理
+    12. `PRM`: Procurement Manager , 採購經理
+    13. `PCO`: Purchasing Coordinator , 採購協調員
+    14. `ICS`: Inventory Control Specialist , 庫存控制專員
+    15. `PA`: Purchasing Agent , 採購代理
+6. `ITD`: IT Department，資訊科技部門
+    1. `ITM`: IT Manager , IT經理
+    2. `ITT`: IT Technician , IT技術員
+    3. `NEN`: Network Engineer , 網絡工程師
+    4. `SDE`: Software Developer , 軟件開發人員
+    5. `ISS`: IT Support Specialist , IT支援專員
+    6. `ITM`: IT Manager , IT經理
+    7. `SA`: Systems Administrator , 系統管理員
+    8. `NE`: Network Engineer , 網絡工程師
+    9. `DBA`: Database Administrator , 數據庫管理員
+    10. `ISS`: IT Support Specialist , IT支援專員
+    11. `SD`: Software Developer , 軟件開發員
+    12. `ITA`: IT Analyst , IT分析師
+    13. `IPM`: IT Project Manager , IT項目經理
+    14. `SEC`: Security Analyst , 安全分析師
+    15. `WD`: Web Developer , 網頁開發員
+7. `HRD`: Human Resources Department，人力資源部門
+    1. `HRS`: Human Resources Specialist , 人力資源專員
+    2. `HRM`: Human Resources Manager , 人力資源經理
+    3. `RS`: Recruitment Specialist , 招聘專員
+    4. `TC`: Training Coordinator , 培訓協調員
+    5. `BA`: Benefits Administrator , 福利管理員
+    6. `HRA`: HR Analyst , 人力資源分析師
+    7. `ERM`: Employee Relations Manager , 員工關係經理
+    8. `HRC`: HR Consultant , 人力資源顧問
+    9. `PS`: Payroll Specialist , 薪資專員
+    10. `HRA`: HR Assistant , 人力資源助理
+8. `MD`: Mine Department，礦業部門
+    1. `MBW`: Mine Blaster Worker , 礦山爆破工
+    2. `UM`: Underground Miner , 地下礦工
+    3. `HEO`: Heavy Equipment Operator , 重型設備操作員
+    4. `DR`: Driller , 鑽孔員
+    5. `EL`: Electrician , 電工
+    6. `MTP`: Material Planner , 材料規劃師
+    7. `HSS`: Health and Safety Specialist , 健康與安全專員
+    8. `MNM`: Mine Manager , 礦山經理
+    9. `CH`: Chemist , 化學家
+    10. `GE`: Geological Engineer , 地質工程師
 
 | 實體 | 屬性     | Domain                                 | 說明                                                                                                             |
 | ---- | -------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -719,8 +809,12 @@
 |      |              | ``local-part = ^[a-zA-Z0-9!#$%&'*+-/=?^_`{\|}~]{1,64}``                                                      | 客戶電子郵件只接受yahoo、gmail、outlook、hotmail、ms live與msn信箱 |
 |      |              | ```domain  = (yahoo\.com\|yahoo\.com\.tw\|gmail\.com \| outlook\.com\|hotmail\.com\|live\.com\|msn\.com)$``` |                                                    |
 <!-- ^[a-zA-Z0-9!#$%&'*+\-\/=?^_`{|}~]{1,64}@(yahoo\.com|yahoo\.com\.tw|gmail\.com|outlook\.com|hotmail\.com|live\.com|msn\.com)$ -->
-客戶ID範例: CLIENT-A00
-客戶電子郵件範例: <41043152@gmail.com>
+
+- 客戶ID範例:
+  - CLIENT-A00
+- 客戶電子郵件範例:
+  - <CLIENT-A00@gmail.com>
+  - <customer/mail@gmail.com>
 
 | 實體   | 屬性           | Domain                                                                    | 說明                               |
 | ------ | -------------- | ------------------------------------------------------------------------- | ---------------------------------- |
@@ -1703,44 +1797,60 @@ CREATE TABLE
 
 範例資料可參考 [Reference data](./reference_data.md)
 
-| 實體 | 屬性   | 範例資料   |
-| ---- | ------ | ---------- |
-| 員工 | 員工ID | PDD-PM-100 |
-|      |        |            |
+| 員工ID | 姓名   | 部門 | 職位 | 員工電子郵件 |
+| ------ | ------ | ---- | ---- | ------------ |
+|        | 鄭詩雅 |      |      |              |
+|        | 蔡佳燕 |      |      |              |
+|        | 林芷儀 |      |      |              |
+|        | 黃慕萱 |      |      |              |
+|        | 劉曉萍 |      |      |              |
+|        | 王鵬翔 |      |      |              |
+|        | 陳昱廷 |      |      |              |
+|        | 張書豪 |      |      |              |
+|        | 楊智淵 |      |      |              |
+|        | 吳柏蒼 |      |      |              |
 
-| 實體 | 屬性 | 範例資料 |
+| 銀行代號 | 銀行名稱 |
+| -------- | -------- |
+|          |          |
+
+| 客戶ID | 客戶名稱 | 客戶電子郵件 |
 | ---- | ---- | -------- |
-| 銀行 |      |          |
+|   |      |          |
 
-| 實體 | 屬性 | 範例資料 |
-| ---- | ---- | -------- |
-| 客戶 |      |          |
+| 供應商ID | 供應商名稱 | 供應商電子郵件 |
+| -------- | ---------- | -------------- |
+|          |            |                |
+|          |            |                |
 
-| 實體   | 屬性 | 範例資料 |
-| ------ | ---- | -------- |
-| 供應商 |      |          |
-|        |      |          |
+| 物品類別ID | 類別說明 |
+| ---------- | -------- |
+|            |          |
 
-| 實體 | 屬性 | 範例資料 |
-| ---- | ---- | -------- |
-| 物品 |      |          |
+| 倉庫ID | 倉庫地址 |倉庫備註|
+| ------ | -------- | --- |
+|        |          |     |
+|        |          |     |
 
-| 實體       | 屬性 | 範例資料 |
-| ---------- | ---- | -------- |
-| 收付款明細 |      |          |
-|            |      |          |
+| 物品ID | 物品類別ID | 物品名稱 | 物品數量 | 數量單位 | 物品單價 | 用途 | 存放地點 | 供應商 |
+| ------ | ---------- | -------- | -------- | -------- | -------- | ---- | -------- | ------ |
+| 交易   |            |          |          |          |          |      |          |        |
 
-| 實體 | 屬性 | 範例資料 |
-| ---- | ---- | -------- |
-| 交易 |      |          |
+| 訂單編號 | 付款日期 | 付款方式 | 交易客戶 | 交易供應商 |
+| -------- | -------- | -------- | -------- | ---------- |
+|      |          |          |          |            |
 
-| 實體 | 屬性 | 範例資料 |
-| ---- | ---- | -------- |
-| 製造 |      |          |
+| 明細ID | 訂單編號 | 物品ID | 購買數量 | 數量單位 |
+| ------ | -------- | ------ | -------- | -------- |
+|    |          |        |          |          |
 
-| 實體 | 屬性 | 範例資料 |
-| ---- | ---- | -------- |
-| 紀錄 |      |          |
+| 帳單編號 | 訂單編號 | 銀行代號 | 銀行帳號 | 交易日期 | 金額 |
+| -------- | -------- | -------- | -------- | -------- | ---- |
+|          |          |          |          |          |      |
+
+| 員工ID | 物品ID | 製造數量 | 銷貨成本 | 製造日期 |
+| -------- | -------- | -------- | -------- | -------- |
+|          |          |          |          |          |
 
 ### 建立 View
 
