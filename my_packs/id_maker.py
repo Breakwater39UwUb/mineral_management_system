@@ -126,7 +126,7 @@ def make_client_id(prefix: str = 'CLIENT',
 
     return client_id
 
-def make_supplier_id(prefix: str = 'SUPPLIER',
+def make_supplier_id(prefix: str = 'SUP',
                      id_length: int = 2):
     """
     This function generates a supplier ID.
@@ -147,7 +147,7 @@ def make_supplier_id(prefix: str = 'SUPPLIER',
 
     Example:
     >>> make_supplier_id()
-    'SUPPLIER-A0'
+    'SUP-A0'
     """
 
     # Check if id_length is a positive integer
