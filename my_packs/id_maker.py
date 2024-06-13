@@ -10,9 +10,11 @@
 9. make_bill_id()
 10. test_all_functions()
 11. random_emp_id()
+12. check_address()
 """
 import random
 import string
+import re
 from datetime import datetime
 from my_packs.business import DEPS, DEP_NAME
 
@@ -420,3 +422,10 @@ def test_random_dep_pos(is_print: bool=False):
         print(dep, pos)
         print(dep_name, '/', pos_name)
     return dep, pos
+
+def check_address(address):
+    pattern = r"^\w+(縣|市)-\w+(鄉|鎮|市|區)(-\w+村|里)?-\w+(路|街)(-\w+段)?(-\w+巷)?(-\w+弄)?-\w+號(-\w+樓)?(-\w+室)?$"
+    if re.match(pattern, address):
+        return True
+    else:
+        return False
