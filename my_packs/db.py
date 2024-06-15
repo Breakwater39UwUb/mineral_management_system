@@ -1,3 +1,25 @@
+'''db operations'''
+
+# TODO: Add following functions
+# Find a item
+# Insert a new item
+# Modify a item
+# Delete a item
+
+# For Human resource department
+# Find a employee
+# Insert a new employee
+# Modify a employee
+# Delete a employee
+
+# For employee or customer or supplier
+# Find a order
+# Insert a new order
+# Modify a order
+# Delete a order
+
+# And other table operations
+
 import pymysql
 from pymysql.constants.ER import DUP_ENTRY
 import csv
