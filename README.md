@@ -49,7 +49,6 @@
   - [View 說明](#view-說明)
     - [建立 View](#建立-view)
     - [使用者建立及權限分配](#使用者建立及權限分配)
-  - [資料表結果圖](#資料表結果圖)
   - [分工](#分工)
   - [參考資料](#參考資料)
 
@@ -148,14 +147,12 @@
 
 **權限劃分說明**：
 
-- **助理**：負責**新增**和**查詢**資料。
+- **助理/專員**：負責**新增**和**查詢**資料。
 - **主管**：除了助理的權限外，還能**更新**資料。
 - **經理**：擁有最高權限，包括新增、查詢、更新，以及在必要時**刪除**資料。
 
-在此基礎上，您的系統使用案例可以簡化為：
-
 1. **管理物品資料**：根據權限劃分，相關人員進行物品資料的新增、查詢、更新或刪除。
-2. **處理訂單**：相應人員根據其權限創建、查詢、更新或取消訂單。
+2. **處理訂單**：業務、採購人員根據其權限創建、查詢、更新或取消訂單。
 3. **財務管理**：財務相關人員進行收付款明細的記錄、查詢和交易結算。
 4. **客戶管理**：行銷人員管理客戶資料，包括新增、查詢和更新。
 5. **供應商管理**：採購人員管理供應商資料，進行新增、查詢和更新。
@@ -892,7 +889,6 @@
 | ---------- | -------- | --------------------------------- | --------------------------------------------------------------------------------------- |
 | 收付款明細 | 帳單編號 | `^[A-Za-z0-9]{3}-[0-9]{6}$`       | 紀錄收付款明細的，此編號由系統產生                                                      |
 |            | 訂單編號 | 格式為 `DATE-OrderId`             | 銷售或進貨訂單上的訂單編號，此編號由系統產生，參考`訂單實體之訂單編號`                  |
-|            | 銀行名稱 | 長度為30的中文字串                | 對應銀行代號之銀行名稱，參考`銀行實體之銀行名稱`                                        |
 |            | 銀行代號 | 長度為3的字串                     | 該銀行對應的三碼數字，由程式檢查其正確性，參考 `銀行實體之銀行代號`                     |
 |            | 銀行帳號 | 長度為14的數字字串，7+7(局號+帳號) | 銀行的帳號                                                                              |
 |            | 交易日期 | 格式為 `yyyy-MM-dd`               | 只儲存年月日，不得小於從公司建立日期                                                    |
@@ -916,21 +912,6 @@
 
     此關聯可被合併為單一欄位至`訂單明細`資料表
 
-    ```sql
-    CREATE TABLE 物品 (
-    物品ID INT PRIMARY KEY，
-    物品名稱 VARCHAR(100)，
-    物品描述 TEXT
-    );
-
-   CREATE TABLE 訂單明細 (
-      訂單明細ID INT PRIMARY KEY，
-      物品ID INT，
-      數量 INT，
-      FOREIGN KEY (物品ID) REFERENCES 物品(物品ID)
-    );
-    ```
-
 3. 下單關係
     | 關聯 | 關聯實體 | 關聯實體 | Cardinality | 說明                                                     |
     | ---- | -------- | -------- | ----------- | -------------------------------------------------------- |
@@ -938,63 +919,12 @@
 
    此關聯可被合併為單一欄位至`訂單`資料表
 
-    > 根據您提供的信息，訂單與客戶之間的關係是一對多（1..n 至 1..n），這意味著一個客戶可以有多筆訂單，但每筆訂單只對應到一個客戶。在這種情況下，我們不需要創建一個新的表來表示這種關係。相反，我們可以在訂單表中添加一個外鍵來參照客戶表。
-    >
-    >以下是用SQL表示這種關係的例子：
-    >
-    > ```sql
-    > -- 創建客戶表
-    > CREATE TABLE Customers (
-    >     CustomerID INT PRIMARY KEY，
-    >     CustomerName VARCHAR(255)，
-    >     CustomerContact VARCHAR(255)
-    > );
-    >
-    > -- 創建訂單表，包含指向客戶表的外鍵
-    > CREATE TABLE Orders (
-    >     OrderID INT PRIMARY KEY，
-    >     OrderDate DATE，
-    >     CustomerID INT，
-    >     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
-    > );
-    > ```
-    >
-    > 在這個例子中，`Orders` 表中的 `CustomerID` 外鍵字段參照 `Customers` 表的主鍵，從而建立了訂單和客戶之間的一對多關係。這樣，我們就可以知道每筆訂單是由哪個客戶下的，而不需要額外創建一個表來存儲這些信息。
-
 4. 產生關係
     | 關聯 | 關聯實體 | 關聯實體 | Cardinality | 說明                                                     |
     | ---- | -------- | -------- | ----------- | -------------------------------------------------------- |
     | 產生 | 訂單明細 | 訂單     | 多對一      | 一筆訂單可以產生多張訂單明細，每張明細只會對應到一筆訂單 |
 
    此關聯可被合併為單一欄位至`訂單明細`資料表
-
-    > 根據您提供的信息，訂單與訂單明細之間的關係是一對多（1..n 至 n..1），這意味著一筆訂單可以產生多張訂單明細，但每張訂單明細只對應到一筆訂單。在這種情況下，我們不需要創建一個新的表來表示這種關係。相反，我們可以在訂單明細表中添加一個外鍵來參照訂單表。
-    >
-    > 以下是用SQL表示這種關係的例子：
-    >
-    > ```sql
-    > -- 創建訂單表
-    > CREATE TABLE Orders (
-    >     OrderID INT PRIMARY KEY，
-    >     OrderDate DATE，
-    >     CustomerID INT
-    >     -- 其他訂單相關欄位
-    > );
-    >
-    > -- 創建訂單明細表，包含指向訂單表的外鍵
-    > CREATE TABLE OrderDetails (
-    >     OrderDetailID INT PRIMARY KEY，
-    >     OrderID INT，
-    >     ProductID INT，
-    >     Quantity INT，
-    >     FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
-    >     -- 其他訂單明細相關欄位
-    > );
-    > ```
-    >
-    > 在這個例子中，`OrderDetails` 表中的 `OrderID` 外鍵字段參照 `Orders` 表的主鍵，從而建立了訂單和訂單明細之間的一對多關係。這樣，我們就可以知道每張訂單明細是屬於哪一筆訂單的，而不需要額外創建一個表來存儲這些信息。
-    >
-    > 如果您有更多關於SQL或數據庫設計的問題，請隨時提問！
 
 5. 製造關係
     | 關聯 | 關聯實體 | 關聯實體 | Cardinality | 說明                                                       |
@@ -1009,10 +939,6 @@
     |      | 銷貨成本 | 正浮點數               | 製造成本，計算商品售價時將進位至整數 |
     |      | 製造日期 | 格式為 `yyyy-MM-dd`    | 製造日期，不小於公司建立日期         |
 
-    > 根據您提供的信息，員工與物品之間的關係是多對多（1..n 至 1..n），這意味著一個員工可以負責製造多個物品，同時一個物品也可以由多位員工負責製造。在這種情況下，我們需要創建一個新的表來表示這種關係，通常稱為關聯表或連接表。
-    >
-    > 以下是用SQL表示這種關係的例子：
-    >
     > ```sql
     > -- 創建員工表
     > CREATE TABLE Employees (
@@ -1039,10 +965,6 @@
     >     -- 可以添加其他描述製造關係的欄位，如製造日期等
     > );
     > ```
-    >
-    > 在這個例子中，`EmployeeItems` 關聯表用來存儲員工ID和物品ID之間的關係，從而表示多對多的關係。每個員工可以製造多個物品，每個物品也可以由多位員工製造。
-    >
-    > 如果您有更多關於SQL或數據庫設計的問題，請隨時提問！
 
 6. 紀錄關係
     | 關聯 | 關聯實體 | 關聯實體   | Cardinality | 說明                                                                 |
@@ -1051,33 +973,6 @@
 
     此關聯可被合併為單一欄位至`收付款明細`資料表
 
-    > 根據您提供的信息，員工與收付款明細之間的關係是一對多（1..n 至 1..1），這意味著一個員工可以負責紀錄多筆收付款明細，但每筆收付款明細只會由一位員工負責。在這種情況下，我們不需要創建一個新的表來表示這種關係。相反，我們可以在收付款明細表中添加一個外鍵來參照員工表。
-    >
-    > 以下是用SQL表示這種關係的例子：
-    >
-    > ```sql
-    > -- 創建員工表
-    > CREATE TABLE Employees (
-    >     EmployeeID INT PRIMARY KEY，
-    >     EmployeeName VARCHAR(255)
-    >     -- 其他員工相關欄位
-    > );
-    >
-    > -- 創建收付款明細表，包含指向員工表的外鍵
-    > CREATE TABLE PaymentDetails (
-    >     PaymentDetailID INT PRIMARY KEY，
-    >     EmployeeID INT，
-    >     PaymentAmount DECIMAL(10， 2)，
-    >     PaymentDate DATE，
-    >     FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
-    >     -- 其他收付款明細相關欄位
-    > );
-    > ```
-    >
-    > 在這個例子中，`PaymentDetails` 表中的 `EmployeeID` 外鍵字段參照 `Employees` 表的主鍵，從而建立了員工和收付款明細之間的一對多關係。這樣，我們就可以知道每筆收付款明細是由哪位員工負責的，而不需要額外創建一個表來存儲這些信息。
-    >
-    > 如果您有更多關於SQL或數據庫設計的問題，請隨時提問！
-
 7. 供應關係
     | 關聯 | 關聯實體 | 關聯實體 | Cardinality | 說明                                                         |
     | ---- | -------- | -------- | ----------- | ------------------------------------------------------------ |
@@ -1085,69 +980,12 @@
 
     此關聯可被合併為單一欄位至`訂單`資料表
 
-    > 根據您提供的信息，訂單與供應商之間的關係是多對一（1..n 至 1..1），這意味著一間供應商可以供應多筆訂單，但每個訂單都只對應到一間供應商。在這種情況下，我們不需要創建一個新的表來表示這種關係。相反，我們可以在訂單表中添加一個外鍵來參照供應商表。
-    >
-    > 以下是用SQL表示這種關係的例子：
-    >
-    > ```sql
-    > -- 創建供應商表
-    > CREATE TABLE Suppliers (
-    >     SupplierID INT PRIMARY KEY，
-    >     SupplierName VARCHAR(255)
-    >     -- 其他供應商相關欄位
-    > );
-    >
-    > -- 創建訂單表，包含指向供應商表的外鍵
-    > CREATE TABLE Orders (
-    >     OrderID INT PRIMARY KEY，
-    >     OrderDate DATE，
-    >     SupplierID INT，
-    >     FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID)
-    >     -- 其他訂單相關欄位
-    > );
-    > ```
-    >
-    > 在這個例子中，`Orders` 表中的 `SupplierID` 外鍵字段參照 `Suppliers` 表的主鍵，從而建立了訂單和供應商之間的多對一關係。這樣，我們就可以知道每個訂單是由哪間供應商供應的，而不需要額外創建一個表來存儲這些信息。
-    >
-    > 如果您有更多關於SQL或數據庫設計的問題，請隨時提問！
-
 8. 包含關係
     | 關聯 | 關聯實體 | 關聯實體 | Cardinality | 說明                                                         |
     | ---- | -------- | -------- | ----------- | ------------------------------------------------------------ |
     | 包含 | 物品類別 | 物品     | 多對一      | 一個物品類別可以包含多種物品，且一種物品只屬於一項物品類別。 |
 
     此關聯可被合併為單一欄位至`物品`資料表
-
-    | 關聯 | 屬性   | Domain | 說明 |
-    | ---- | ------ | ------ | ---- |
-    | 包含 | 物品ID |        |      |
-    |      | 類別ID |        |      |
-
-    > 根據您提供的信息，物品類別與物品之間的關係是多對一（1..n 至 1..1），這意味著一個物品類別可以包含多種物品，但每種物品只屬於一項物品類別。在這種情況下，我們不需要創建一個新的表來表示這種關係。相反，我們可以在物品表中添加一個外鍵來參照物品類別表。
-    >
-    > 以下是用SQL表示這種關係的例子：
-    >
-    > ```sql
-    > -- 創建物品類別表
-    > CREATE TABLE ItemCategories (
-    >     CategoryID INT PRIMARY KEY，
-    >     CategoryName VARCHAR(255)
-    >     -- 其他物品類別相關欄位
-    > );
-    >
-    > -- 創建物品表，包含指向物品類別表的外鍵
-    > CREATE TABLE Items (
-    >     ItemID INT PRIMARY KEY，
-    >     ItemName VARCHAR(255)，
-    >     CategoryID INT，
-    >     FOREIGN KEY (CategoryID) REFERENCES ItemCategories(CategoryID)
-    >     -- 其他物品相關欄位
-    > );
-    > ```
-    >
-    > 在這個例子中，`Items` 表中的 `CategoryID` 外鍵字段參照 `ItemCategories` 表的主鍵，從而建立了物品和物品類別之間的多對一關係。這樣，我們就可以知道每種物品屬於哪一個物品類別，而不需要額外創建一個表來存儲這些信息。
-    >
-    > 如果您有更多關於SQL或數據庫設計的問題，請隨時提問！
 
 9. 存放關係
     | 關聯 | 關聯實體 | 關聯實體 | Cardinality | 說明                                                     |
@@ -1161,70 +999,12 @@
     | 存放 | 倉庫ID |        |      |
     |      | 物品ID |        |      |
 
-    > 根據您提供的信息，倉庫與物品之間的關係是多對一（1..n 至 1..1），這意味著多種物品可以存放到一個倉庫中，但每種物品只存放在一個倉庫中。在這種情況下，我們不需要創建一個新的表來表示這種關係。相反，我們可以在物品表中添加一個外鍵來參照倉庫表。
-    >
-    > 以下是用SQL表示這種關係的例子：
-    >
-    > ```sql
-    > -- 創建倉庫表
-    > CREATE TABLE Warehouses (
-    >     WarehouseID INT PRIMARY KEY，
-    >     WarehouseName VARCHAR(255)
-    >     -- 其他倉庫相關欄位
-    > );
-    >
-    > -- 創建物品表，包含指向倉庫表的外鍵
-    > CREATE TABLE Items (
-    >     ItemID INT PRIMARY KEY，
-    >     ItemName VARCHAR(255)，
-    >     WarehouseID INT，
-    >     FOREIGN KEY (WarehouseID) REFERENCES Warehouses(WarehouseID)
-    >     -- 其他物品相關欄位
-    > );
-    > ```
-    >
-    > 在這個例子中，`Items` 表中的 `WarehouseID` 外鍵字段參照 `Warehouses` 表的主鍵，從而建立了物品和倉庫之間的多對一關係。這樣，我們就可以知道每種物品存放在哪個倉庫中，而不需要額外創建一個表來存儲這些信息。
-    >
-    > 如果您有更多關於SQL或數據庫設計的問題，請隨時提問！
-
 10. 確認關係
     | 關聯 | 關聯實體   | 關聯實體 | Cardinality | 說明                                                         |
     | ---- | ---------- | -------- | ----------- | ------------------------------------------------------------ |
     | 確認 | 收付款明細 | 銀行     | 多對一      | 多筆明細可對照到一間銀行，但每筆收付款明細只對應到一家銀行。 |
 
     此關聯可被合併為單一欄位至`收付款明細`資料表
-
-    | 關聯 | 屬性     | Domain | 說明 |
-    | ---- | -------- | ------ | ---- |
-    | 確認 | 帳單編號 |        |      |
-    |      | 銀行代號 |        |      |
-
-    > 根據您提供的信息，收付款明細與銀行之間的關係是多對一（1..n 至 1..1），這意味著多筆收付款明細可以對應到一家銀行，但每筆收付款明細只對應到一家銀行。在這種情況下，我們不需要創建一個新的表來表示這種關係。相反，我們可以在收付款明細表中添加一個外鍵來參照銀行表。
-    >
-    > 以下是用SQL表示這種關係的例子：
-    >
-    > ```sql
-    > -- 創建銀行表
-    > CREATE TABLE Banks (
-    >     BankID INT PRIMARY KEY，
-    >     BankName VARCHAR(255)
-    >     -- 其他銀行相關欄位
-    > );
-    >
-    > -- 創建收付款明細表，包含指向銀行表的外鍵
-    > CREATE TABLE PaymentDetails (
-    >     PaymentDetailID INT PRIMARY KEY，
-    >     BankID INT，
-    >     PaymentAmount DECIMAL(10， 2)，
-    >     PaymentDate DATE，
-    >     FOREIGN KEY (BankID) REFERENCES Banks(BankID)
-    >     -- 其他收付款明細相關欄位
-    > );
-    > ```
-    >
-    > 在這個例子中，`PaymentDetails` 表中的 `BankID` 外鍵字段參照 `Banks` 表的主鍵，從而建立了收付款明細和銀行之間的多對一關係。這樣，我們就可以知道每筆收付款明細是通過哪家銀行處理的，而不需要額外創建一個表來存儲這些信息。
-    >
-    > 如果您有更多關於SQL或數據庫設計的問題，請隨時提問！
 
 ## 使用者說明
 
@@ -1849,73 +1629,9 @@ CREATE TABLE
 
 銷售可能需要列出所有訂單和負責的員工
 
-
 ### 建立 View
 
 ### 使用者建立及權限分配
-
-Sure, here are all the possible company departments and positions, along with their corresponding database user permissions:
-Departments:
-
-- Sales: Responsible for managing customer orders and relationships.
-- Purchasing: Responsible for procuring goods and materials from suppliers.
-- Production: Responsible for manufacturing and storing finished goods.
-- Finance: Responsible for managing financial transactions, including payments and receipts.
-- Inventory: Responsible for managing the company's inventory of goods and materials.
-- Human Resources: Responsible for managing employee information and payroll.
-
-Positions:
-
-- Sales Manager: Oversees the sales department and its employees.
-- Sales Representative: Interacts with customers to generate sales leads and orders.
-- Purchasing Manager: Oversees the purchasing department and its employees.
-- Purchasing Agent: Researches and sources goods and materials from suppliers.
-- Production Manager: Oversees the production department and its employees.
-- Production Worker: Manufactures finished goods according to production plans.
-- Accountant: Records and manages financial transactions.
-- Inventory Manager: Oversees the inventory department and its employees.
-- Inventory Clerk: Tracks and manages inventory levels.
-- HR Manager: Oversees the HR department and its employees.
-- HR Specialist: Handles employee onboarding, payroll, and benefits.
-
-Database User Permissions:
-Based on the provided system requirements document, here's a breakdown of the database user permissions for each department and position:
-
-Sales Department:
-
-- Sales Manager: Can view, create, modify, and delete all sales orders and customer information.
-- Sales Representative: Can view, create, and modify sales orders for their assigned customers. Can view customer information.
-
-Purchasing Department:
-
-- Purchasing Manager: Can view, create, modify, and delete all purchase orders and supplier information.
-- Purchasing Agent: Can view, create, and modify purchase orders. Can view supplier information.
-
-Production Department:
-
-- Production Manager: Can view, create, and modify production plans and inventory records. Can view employee information for production workers.
-- Production Worker: Can view production plans for their assigned tasks. Can record production output.
-
-Finance Department:
-
-- Accountant: Can view, create, and modify all financial transactions, including payments and receipts.
-- Bookkeeper: Can view and record financial transactions.
-
-Inventory Department:
-
-- Inventory Manager: Can view, create, modify, and delete all inventory records.
-- Inventory Clerk: Can view and modify inventory records.
-
-HR Department:
-
-- HR Manager: Can view, create, modify, and delete all employee information.
-- HR Specialist: Can view and modify employee information. Can process payroll.
-
-Please note that these are just general guidelines, and the specific permissions for each position may vary depending on the company's specific needs.
-
-## 資料表結果圖
-
-![資料表關聯圖](./document/Idef1xentityrelationshipdiagram1.png)
 
 ## 分工
 
@@ -1924,28 +1640,28 @@ Please note that these are just general guidelines, and the specific permissions
 1. 完整性限制與詳細說明
 2. 實作VIEW
 3. 使用者權限劃分
-4. 25%
+4. 31%
 
 吳枰樟
 
 1. 設計整體架構與ER-Diagram
 2. ER-Diagram轉換SQL語法
 3. 完整性限制實作
-4. 25%
+4. 31%
 
 俞漢威
 
-1. 使用案例
-2. 設計VIEW
-3. 設計系統操作流程
-4. 25%
+1. 設計VIEW
+2. 設計系統操作流程
+3. 7%
 
 許書和
 
 1. 構思應用情境與系統需求說明
 2. 繪製ER-Diagram
 3. 改善ER-Diagram與架構
-4. 25%
+4. 使用案例
+5. 31%
 
 ## 參考資料
 
