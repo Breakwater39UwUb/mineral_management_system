@@ -497,14 +497,14 @@
 |          | 購買數量 |             |
 |          | 數量單位 |             |
 
-| 實體       | 屬性     | Key           |
-| ---------- | -------- | ------------- |
-| 收付款明細 | 帳單編號 | Primary Key   |
-|            | 訂單編號 | Foreign Key   |
-|            | 銀行代號 | Foreign Key   |
-|            | 銀行帳號 | Alternate Key |
-|            | 交易日期 |               |
-|            | 金額     |               |
+| 實體       | 屬性     | Key         |
+| ---------- | -------- | ----------- |
+| 收付款明細 | 帳單編號 | Primary Key |
+|            | 訂單編號 | Foreign Key |
+|            | 銀行代號 | Foreign Key |
+|            | 銀行帳號 |             |
+|            | 交易日期 |             |
+|            | 金額     |             |
 
 ### 關聯屬性
 
@@ -1632,6 +1632,33 @@ CREATE TABLE
 ### 建立 View
 
 ### 使用者建立及權限分配
+
+```sql
+CREATE USER 'MSD_manager'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'MSD_supervisor'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'MSD_specialist'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'FD_manager'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'FD_supervisor'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'FD_specialist'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'POD_manager'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'POD_supervisor'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'POD_specialist'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'CSD_manager'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'CSD_supervisor'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'CSD_specialist'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'PD_manager'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'PD_supervisor'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'PD_specialist'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'DBA'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'ITD_supervisor'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'ITD_specialist'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'HRD_manager'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'HRD_supervisor'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'HRD_specialist'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'MD_manager'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'MD_supervisor'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'MD_specialist'@'localhost' IDENTIFIED BY '123456';
+```
 
 ## 分工
 
